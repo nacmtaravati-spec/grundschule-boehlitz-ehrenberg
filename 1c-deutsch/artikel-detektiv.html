@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Der Artikel-Detektiv</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ECE2CC;
+    --bg-card: #F8F2E2;
+    --bg-card-2: #F1E7CE;
+    --ink: #23293A;
+    --ink-soft: rgba(35,41,58,0.68);
+    --accent-red: #9E3226;
+    --accent-red-ink: #FBEBE7;
+    --accent-gold: #A9791E;
+    --accent-green: #34633F;
+    --accent-green-ink: #E9F3EA;
+    --border: #C9B98A;
+    --card-shadow: rgba(60,45,15,0.22);
+    font-family: 'Baloo 2', 'Segoe UI', sans-serif;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #12151C;
+      --bg-card: #1E2431;
+      --bg-card-2: #232A39;
+      --ink: #F1E9D8;
+      --ink-soft: rgba(241,233,216,0.68);
+      --accent-red: #DE6A57;
+      --accent-red-ink: #3A211D;
+      --accent-gold: #E4B94F;
+      --accent-green: #7FCB96;
+      --accent-green-ink: #1B3323;
+      --border: #3B4356;
+      --card-shadow: rgba(0,0,0,0.45);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151C;
+    --bg-card: #1E2431;
+    --bg-card-2: #232A39;
+    --ink: #F1E9D8;
+    --ink-soft: rgba(241,233,216,0.68);
+    --accent-red: #DE6A57;
+    --accent-red-ink: #3A211D;
+    --accent-gold: #E4B94F;
+    --accent-green: #7FCB96;
+    --accent-green-ink: #1B3323;
+    --border: #3B4356;
+    --card-shadow: rgba(0,0,0,0.45);
+  }
+
+  * { box-sizing: border-box; }
+  html {
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+  }
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100%;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background-image:
+      radial-gradient(circle at 18% 22%, rgba(169,121,30,0.07) 0, transparent 45%),
+      radial-gradient(circle at 82% 78%, rgba(158,50,38,0.06) 0, transparent 45%);
+  }
+
+  .app {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 28px 18px 40px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 14px;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: clamp(1.5rem, 6vw, 2.1rem);
+    margin: 0 0 8px;
+    line-height: 1.25;
+  }
+  .subtitle {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 46ch;
+    margin-inline: auto;
+  }
+  .class-tag {
+    font-size: 0.85rem;
+    color: var(--accent-gold);
+    font-weight: 700;
+    margin: 10px 0 0;
+  }
+
+  .briefing {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .briefing .icon { font-size: 1.6rem; line-height: 1; }
+  .briefing strong { color: var(--ink); }
+
+  .chase { margin-bottom: 18px; }
+  .chase-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .chase-track {
+    position: relative;
+    height: 34px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .chase-fill {
+    position: absolute;
+    inset: 0;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-gold), var(--accent-red));
+    transition: width 0.5s ease;
+    opacity: 0.28;
+  }
+  .chase-robber {
+    position: absolute;
+    top: 50%;
+    left: 4%;
+    transform: translate(-50%, -50%);
+    font-size: 1.3rem;
+    transition: left 0.5s ease;
+  }
+  .chase-jail {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    font-size: 1.15rem;
+  }
+
+  .help-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .help-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px dashed var(--accent-gold);
+    color: var(--accent-gold);
+    font-family: 'Baloo 2', 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 7px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .help-btn:hover { background: rgba(169,121,30,0.08); }
+  .help-btn:focus-visible { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+  .feedback.hint { border-style: solid; }
+  .feedback.hint .hint-text { color: var(--ink); font-size: 1rem; margin: 0; }
+
+  .progress {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 20px 0 26px;
+    flex-wrap: wrap;
+  }
+  .dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg-card);
+    font-size: 0.68rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    transition: background 0.25s, border-color 0.25s, color 0.25s;
+  }
+  .dot.current { border-color: var(--accent-gold); transform: scale(1.15); }
+  .dot.right { background: var(--accent-green); border-color: var(--accent-green); color: var(--accent-green-ink); }
+  .dot.wrong { background: var(--accent-red); border-color: var(--accent-red); color: var(--accent-red-ink); }
+
+  .case-label {
+    text-align: center;
+    font-family: 'Special Elite', 'Courier New', monospace;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .word-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 10px;
+    font-family: 'Baloo 2', 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.15rem, 5vw, 1.4rem);
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 6px 0 var(--card-shadow);
+    transform: rotate(var(--tilt, 0deg));
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s, border-color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .word-card:nth-child(1) { --tilt: -1.6deg; }
+  .word-card:nth-child(2) { --tilt: 1.2deg; }
+  .word-card:nth-child(3) { --tilt: 1.8deg; }
+  .word-card:nth-child(4) { --tilt: -1deg; }
+  .word-card:hover:not(.locked) {
+    transform: rotate(var(--tilt, 0deg)) translateY(-3px);
+    box-shadow: 0 9px 0 var(--card-shadow);
+  }
+  .word-card:active:not(.locked) {
+    transform: rotate(var(--tilt, 0deg)) translateY(2px);
+    box-shadow: 0 3px 0 var(--card-shadow);
+  }
+  .word-card:focus-visible {
+    outline: 3px solid var(--accent-gold);
+    outline-offset: 2px;
+  }
+  .word-card.locked { cursor: default; }
+  .word-card.pick-correct {
+    background: var(--accent-green-ink);
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+  }
+  .word-card.pick-wrong {
+    background: var(--accent-red-ink);
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+  }
+  .word-card .article {
+    display: block;
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    min-height: 1em;
+  }
+  .word-card.pick-correct .article,
+  .word-card.pick-wrong .article { color: inherit; opacity: 0.85; }
+
+  .feedback {
+    min-height: 108px;
+    background: var(--bg-card-2);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+    text-align: center;
+    position: relative;
+  }
+  .feedback.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .stamp {
+    display: inline-block;
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    border: 3px solid currentColor;
+    border-radius: 8px;
+    padding: 3px 12px;
+    transform: rotate(-3deg);
+    margin-bottom: 8px;
+  }
+  .stamp.right { color: var(--accent-green); }
+  .stamp.wrong { color: var(--accent-red); }
+  .feedback p { margin: 6px 0 0; font-size: 1rem; line-height: 1.4; }
+  .feedback .row {
+    margin-top: 10px;
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .feedback .row strong { color: var(--ink); }
+
+  .next-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    font-family: 'Baloo 2', 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--accent-green-ink);
+    background: var(--accent-green);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.18);
+  }
+  .next-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.18); }
+  .next-btn:focus-visible { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+  .next-btn[hidden] { display: none; }
+
+  .end-screen {
+    text-align: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 22px;
+  }
+  .end-screen .stamp-big {
+    font-size: 2.6rem;
+    margin-bottom: 6px;
+  }
+  .end-screen h2 {
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 1.4rem;
+    margin: 0 0 6px;
+  }
+  .end-screen .score-line {
+    font-size: 1.15rem;
+    margin-bottom: 4px;
+  }
+  .end-screen .best-line {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  .restart-btn {
+    padding: 13px 26px;
+    font-family: 'Baloo 2', 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    background: var(--accent-gold);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.18);
+  }
+  .restart-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.18); }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <span class="badge">🚓 Fahndungsakte · Klasse 2</span>
+    <h1>Der Artikel-Detektiv</h1>
+    <p class="subtitle">Drei Wörter gehören zusammen. Eins hat der Räuber vertauscht. Findet ihn!</p>
+    <p class="class-tag">Klasse 2 · Grundschule Böhlitz-Ehrenberg</p>
+  </header>
+
+  <div class="briefing">
+    <span class="icon">🥸</span>
+    <div><strong>Fahndungsaufruf:</strong> Der Wort-Räuber ist entkommen und hat der Polizei ein Rätsel hinterlassen. In jeder Wortreihe hat er ein falsches Wort versteckt. Löst alle Fälle, um ihn zu schnappen!</div>
+  </div>
+
+  <div class="chase">
+    <div class="chase-label"><span>Fahndungsfortschritt</span><span id="chaseText">0 / 10 Spuren</span></div>
+    <div class="chase-track">
+      <div class="chase-fill" id="chaseFill"></div>
+      <span class="chase-robber" id="chaseRobber">🥸</span>
+      <span class="chase-jail">🚔</span>
+    </div>
+  </div>
+
+  <div id="progress" class="progress" aria-hidden="true"></div>
+  <div id="caseLabel" class="case-label"></div>
+
+  <main id="game">
+    <div id="board" class="board"></div>
+    <div class="help-row"><button id="helpBtn" class="help-btn" type="button">💡 Hilfe</button></div>
+    <div id="feedback" class="feedback empty" aria-live="polite">Tippe auf das Wort, das nicht dazugehört.</div>
+    <button id="nextBtn" class="next-btn" hidden>Nächster Fall</button>
+  </main>
+
+  <div id="endScreen" class="end-screen" hidden>
+    <div class="stamp-big" id="endEmoji">🏆</div>
+    <h2 id="endTitle">Fahndung beendet!</h2>
+    <p class="score-line" id="endScore"></p>
+    <p class="best-line" id="endBest"></p>
+    <button class="restart-btn" id="restartBtn">Neue Fälle übernehmen</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var ROUND_DATA = [
+    [{a:'das',w:'Haus'},{a:'das',w:'Kind'},{a:'das',w:'Buch'},{a:'der',w:'Regen'}],
+    [{a:'der',w:'Tisch'},{a:'der',w:'Stuhl'},{a:'der',w:'Schrank'},{a:'die',w:'Lampe'}],
+    [{a:'die',w:'Sonne'},{a:'die',w:'Blume'},{a:'die',w:'Wolke'},{a:'das',w:'Auto'}],
+    [{a:'der',w:'Hund'},{a:'der',w:'Vogel'},{a:'der',w:'Fisch'},{a:'die',w:'Katze'}],
+    [{a:'das',w:'Fenster'},{a:'das',w:'Zimmer'},{a:'das',w:'Bett'},{a:'die',w:'Tür'}],
+    [{a:'die',w:'Schule'},{a:'die',w:'Tafel'},{a:'die',w:'Uhr'},{a:'der',w:'Stift'}],
+    [{a:'der',w:'Apfel'},{a:'der',w:'Baum'},{a:'der',w:'Garten'},{a:'die',w:'Blume'}],
+    [{a:'die',w:'Maus'},{a:'die',w:'Kuh'},{a:'die',w:'Ziege'},{a:'das',w:'Pferd'}],
+    [{a:'das',w:'Meer'},{a:'das',w:'Boot'},{a:'das',w:'Schiff'},{a:'die',w:'Insel'}],
+    [{a:'der',w:'Mond'},{a:'der',w:'Stern'},{a:'der',w:'Himmel'},{a:'die',w:'Nacht'}]
+  ];
+
+  var STORAGE_KEY = 'artikel-detektiv-best';
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function findOddIndex(round) {
+    var counts = {};
+    round.forEach(function (c) { counts[c.a] = (counts[c.a] || 0) + 1; });
+    for (var i = 0; i < round.length; i++) {
+      if (counts[round[i].a] === 1) return i;
+    }
+    return 0;
+  }
+
+  function readBest() {
+    try {
+      var v = window.localStorage.getItem(STORAGE_KEY);
+      return v ? parseInt(v, 10) : null;
+    } catch (e) { return null; }
+  }
+  function writeBest(score) {
+    try { window.localStorage.setItem(STORAGE_KEY, String(score)); } catch (e) {}
+  }
+
+  var state = {};
+
+  function newGame() {
+    var rounds = shuffle(ROUND_DATA).map(function (r) { return shuffle(r); });
+    state = { rounds: rounds, current: 0, score: 0, answered: false, results: [] };
+    document.getElementById('endScreen').hidden = true;
+    document.getElementById('game').hidden = false;
+    document.getElementById('progress').hidden = false;
+    document.getElementById('caseLabel').hidden = false;
+    renderProgress();
+    updateChase();
+    renderRound();
+  }
+
+  function updateChase() {
+    var total = state.rounds.length;
+    var pct = Math.round((state.score / total) * 100);
+    document.getElementById('chaseFill').style.width = pct + '%';
+    document.getElementById('chaseRobber').style.left = Math.min(pct, 88) + '%';
+    document.getElementById('chaseText').textContent = state.score + ' / ' + total + ' Spuren';
+  }
+
+  function renderProgress() {
+    var el = document.getElementById('progress');
+    el.innerHTML = '';
+    state.rounds.forEach(function (_, i) {
+      var d = document.createElement('div');
+      d.className = 'dot';
+      if (i === state.current) d.classList.add('current');
+      if (state.results[i] === true) d.classList.add('right');
+      if (state.results[i] === false) d.classList.add('wrong');
+      d.textContent = state.results[i] === true ? '✓' : state.results[i] === false ? '✕' : (i + 1);
+      el.appendChild(d);
+    });
+  }
+
+  function renderRound() {
+    state.answered = false;
+    var round = state.rounds[state.current];
+    document.getElementById('caseLabel').textContent = 'Fall ' + (state.current + 1) + ' von ' + state.rounds.length;
+    var board = document.getElementById('board');
+    board.innerHTML = '';
+    round.forEach(function (item, idx) {
+      var card = document.createElement('button');
+      card.className = 'word-card';
+      card.type = 'button';
+      card.innerHTML = item.w + '<span class="article">&nbsp;</span>';
+      card.addEventListener('click', function () { pick(idx); });
+      board.appendChild(card);
+    });
+    var fb = document.getElementById('feedback');
+    fb.className = 'feedback empty';
+    fb.textContent = 'Tippe auf das Wort, das nicht dazugehört.';
+    document.getElementById('nextBtn').hidden = true;
+    document.getElementById('helpBtn').hidden = false;
+  }
+
+  function pick(idx) {
+    if (state.answered) return;
+    state.answered = true;
+    var round = state.rounds[state.current];
+    var oddIndex = findOddIndex(round);
+    var correct = idx === oddIndex;
+    state.results[state.current] = correct;
+    if (correct) state.score++;
+
+    var cards = document.querySelectorAll('.word-card');
+    cards.forEach(function (c, i) {
+      c.classList.add('locked');
+      var artSpan = c.querySelector('.article');
+      artSpan.textContent = round[i].a;
+      if (i === oddIndex) c.classList.add('pick-correct');
+      else if (i === idx && !correct) c.classList.add('pick-wrong');
+    });
+
+    var mainArticle = round[(oddIndex + 1) % 4].a;
+    var oddItem = round[oddIndex];
+    var pickedItem = round[idx];
+
+    var fb = document.getElementById('feedback');
+    fb.className = 'feedback';
+    if (correct) {
+      fb.innerHTML =
+        '<span class="stamp right">GELÖST</span>' +
+        '<p>Richtig! „' + oddItem.a + ' ' + oddItem.w + '“ ist der Übeltäter – die anderen drei gehören alle zu „' + mainArticle + '“.</p>' +
+        '<div class="row">' + round.map(function (c) { return c.a + ' ' + c.w; }).join(' · ') + '</div>';
+    } else {
+      fb.innerHTML =
+        '<span class="stamp wrong">FALSCHE SPUR</span>' +
+        '<p>„' + pickedItem.a + ' ' + pickedItem.w + '“ gehört zu den anderen drei. Der Übeltäter war „' + oddItem.a + ' ' + oddItem.w + '“.</p>' +
+        '<div class="row">' + round.map(function (c) { return c.a + ' ' + c.w; }).join(' · ') + '</div>';
+    }
+
+    document.getElementById('helpBtn').hidden = true;
+    renderProgress();
+    updateChase();
+    var nextBtn = document.getElementById('nextBtn');
+    nextBtn.hidden = false;
+    nextBtn.textContent = (state.current === state.rounds.length - 1) ? 'Räuber schnappen' : 'Nächster Fall';
+  }
+
+  function nextRound() {
+    if (state.current < state.rounds.length - 1) {
+      state.current++;
+      renderProgress();
+      renderRound();
+    } else {
+      showEnd();
+    }
+  }
+
+  function showEnd() {
+    document.getElementById('game').hidden = true;
+    document.getElementById('progress').hidden = true;
+    document.getElementById('caseLabel').hidden = true;
+    var end = document.getElementById('endScreen');
+    end.hidden = false;
+
+    var score = state.score;
+    var total = state.rounds.length;
+    var emoji, title;
+    if (score >= total * 0.8) { emoji = '🚔'; title = 'Räuber geschnappt!'; }
+    else if (score >= total * 0.7) { emoji = '🥸'; title = 'Fast geschnappt!'; }
+    else if (score >= total * 0.4) { emoji = '🔍'; title = 'Auf der richtigen Spur'; }
+    else { emoji = '🏃💨'; title = 'Der Räuber ist entkommen'; }
+
+    document.getElementById('endEmoji').textContent = emoji;
+    document.getElementById('endTitle').textContent = title;
+    document.getElementById('endScore').textContent = 'Ihr habt ' + score + ' von ' + total + ' Spuren richtig gedeutet.';
+
+    var best = readBest();
+    if (best === null || score > best) {
+      writeBest(score);
+      document.getElementById('endBest').textContent = best === null ? 'Neue Bestleistung!' : 'Neue Bestleistung! (vorher ' + best + '/' + total + ')';
+    } else {
+      document.getElementById('endBest').textContent = 'Bestleistung: ' + best + ' von ' + total;
+    }
+  }
+
+  document.getElementById('helpBtn').addEventListener('click', function () {
+    if (state.answered) return;
+    var round = state.rounds[state.current];
+    var oddIndex = findOddIndex(round);
+    var mainArticle = round[(oddIndex + 1) % 4].a;
+    var fb = document.getElementById('feedback');
+    fb.className = 'feedback hint';
+    fb.innerHTML = '<p class="hint-text">💡 Tipp: Drei Wörter gehören zu „' + mainArticle + '“. Genau eins passt nicht dazu – das ist der Räuber!</p>';
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', nextRound);
+  document.getElementById('restartBtn').addEventListener('click', newGame);
+
+  newGame();
+})();
+</script>
+</body>
+</html>
