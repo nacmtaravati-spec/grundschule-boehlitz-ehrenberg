@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nomen-Fabrik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Farben (hell) ---------- */
+  :root{
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+
+    --bg:#e6edfb; --bg-2:#d3e0fb;
+    --surface:#ffffff; --surface-2:#f1f5ff;
+    --ink:#14213d; --ink-soft:#44527a; --line:#bccbec;
+    --accent:#ffc400; --accent-ink:#241a00; --accent-strong:#b98a00;
+    --good:#15803d; --bad:#c62828; --cap:#d62839; --focus:#14213d;
+
+    --paper:#f7e7ac; --paper-ink:#2b2410; --paper-line:#d9c26e; --paper-soft:#fff6d0;
+
+    --menschen:#2457d6; --menschen-soft:#e2ebff;
+    --tiere:#c2410c;    --tiere-soft:#ffe9db;
+    --pflanzen:#15803d; --pflanzen-soft:#dcf4e4;
+    --dinge:#7c3aed;    --dinge-soft:#ece6ff;
+    --on-cat:#ffffff;
+    --teamA:#f2a900; --on-teamA:#241a00; --teamB:#0d9488; --on-teamB:#ffffff;
+    --wall-a:#a5c7f2; --wall-b:#7ea6df; --wall-line:rgba(255,255,255,.2);
+
+    --shadow:0 5px 0 rgba(20,33,61,.14), 0 14px 30px rgba(20,33,61,.14);
+  }
+  /* ---------- Farben (dunkel) ---------- */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0c1224; --bg-2:#141c38;
+      --surface:#172041; --surface-2:#1f2a52;
+      --ink:#eef2ff; --ink-soft:#aab6dc; --line:#2f3d6e;
+      --accent:#ffcf33; --accent-ink:#241a00; --accent-strong:#a67c00;
+      --good:#4ade80; --bad:#ff7b7b; --cap:#ff8a98; --focus:#ffcf33;
+      --menschen:#5b8fff; --menschen-soft:#1b2d5e;
+      --tiere:#ff8f55;    --tiere-soft:#4a2b1b;
+      --pflanzen:#45d38a; --pflanzen-soft:#173d2b;
+      --dinge:#ab90fb;    --dinge-soft:#33285f;
+      --on-cat:#0b1220;
+      --teamA:#ffcf33; --on-teamA:#241a00; --teamB:#2dd4bf; --on-teamB:#0b1220;
+      --wall-a:#22335c; --wall-b:#172445; --wall-line:rgba(255,255,255,.07);
+      --shadow:0 5px 0 rgba(0,0,0,.35), 0 14px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0c1224; --bg-2:#141c38;
+    --surface:#172041; --surface-2:#1f2a52;
+    --ink:#eef2ff; --ink-soft:#aab6dc; --line:#2f3d6e;
+    --accent:#ffcf33; --accent-ink:#241a00; --accent-strong:#a67c00;
+    --good:#4ade80; --bad:#ff7b7b; --cap:#ff8a98; --focus:#ffcf33;
+    --menschen:#5b8fff; --menschen-soft:#1b2d5e;
+    --tiere:#ff8f55;    --tiere-soft:#4a2b1b;
+    --pflanzen:#45d38a; --pflanzen-soft:#173d2b;
+    --dinge:#ab90fb;    --dinge-soft:#33285f;
+    --on-cat:#0b1220;
+    --teamA:#ffcf33; --on-teamA:#241a00; --teamB:#2dd4bf; --on-teamB:#0b1220;
+    --wall-a:#22335c; --wall-b:#172445; --wall-line:rgba(255,255,255,.07);
+    --shadow:0 5px 0 rgba(0,0,0,.35), 0 14px 30px rgba(0,0,0,.35);
+  }
+
+  /* ---------- Grundlagen ---------- */
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background-color:var(--bg);
+    background-image:radial-gradient(circle at 12% 0%, var(--bg-2), transparent 45%);
+    background-repeat:no-repeat;background-attachment:fixed;
+    color:var(--ink);
+    font-family:'Andika','Trebuchet MS','Comic Sans MS',system-ui,sans-serif;
+    font-size:18px;line-height:1.45;-webkit-tap-highlight-color:transparent;
+  }
+  h1,h2,.btn,.word,.col-head,.tab,.count,.stash .n{font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif}
+  :focus-visible{outline:4px solid var(--focus);outline-offset:3px}
+  button{font:inherit;color:inherit}
+
+  [data-cat="menschen"]{--cat:var(--menschen);--cat-soft:var(--menschen-soft)}
+  [data-cat="tiere"]{--cat:var(--tiere);--cat-soft:var(--tiere-soft)}
+  [data-cat="pflanzen"]{--cat:var(--pflanzen);--cat-soft:var(--pflanzen-soft)}
+  [data-cat="dinge"]{--cat:var(--dinge);--cat-soft:var(--dinge-soft)}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.4em;
+    border:3px solid var(--ink);border-radius:999px;cursor:pointer;
+    padding:.5em 1.2em;font-weight:600;font-size:1.1rem;line-height:1.2;
+    background:var(--surface);color:var(--ink);
+    box-shadow:0 4px 0 var(--ink);transition:transform .08s, box-shadow .08s;
+  }
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+  .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent-ink);box-shadow:0 5px 0 var(--accent-ink);font-size:clamp(1.3rem,2.4vw,1.8rem);padding:.55em 1.4em}
+  .btn.primary:active{box-shadow:0 2px 0 var(--accent-ink)}
+  .btn.primary.mid{font-size:clamp(1.1rem,1.8vw,1.35rem);padding:.45em 1.2em}
+  .icon-btn{
+    border:3px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;
+    min-width:46px;height:46px;padding:0 .7em;cursor:pointer;font-size:1.15rem;line-height:1;
+  }
+  .icon-btn.round{border-radius:50%;width:56px;height:56px;padding:0;font-size:1.4rem}
+  .linkbtn{
+    display:inline-block;background:none;border:0;padding:.3em .2em;cursor:pointer;
+    color:var(--ink-soft);font-size:.9rem;text-decoration:underline;text-underline-offset:3px;
+  }
+
+  /* ---------- Startseite mit Auftrag ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:clamp(12px,3vw,36px)}
+  .intro-grid{display:grid;grid-template-columns:minmax(220px,330px) 1fr;gap:clamp(16px,3.5vw,48px);align-items:start}
+  .left{display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:38px}
+  .det{display:block}
+  .det svg,.det img{display:block;width:100%;height:100%}
+  .det img{object-fit:contain}
+  .det-big{
+    width:100%;aspect-ratio:5/6;background:var(--surface);border:5px solid var(--accent);
+    border-radius:30px;padding:12px;box-shadow:var(--shadow);overflow:hidden;
+  }
+  .det.small{width:66px;height:66px;flex:none;border-radius:50%;border:4px solid var(--accent);background:var(--surface);overflow:hidden}
+  .det.small img{object-fit:cover;object-position:50% 18%}
+  .tools{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 12px;margin-top:6px}
+
+  .file{
+    position:relative;margin-top:38px;background:var(--paper);color:var(--paper-ink);
+    border-radius:0 26px 26px 26px;padding:clamp(18px,3vw,38px);box-shadow:var(--shadow);
+    border:3px solid var(--paper-ink);
+  }
+  .tab{
+    position:absolute;left:-3px;top:-41px;background:var(--paper);color:var(--paper-ink);
+    border:3px solid var(--paper-ink);border-bottom:0;border-radius:16px 16px 0 0;
+    padding:.25em 1.1em .1em;font-weight:600;font-size:1.05rem;
+  }
+  .file h1{margin:0 0 .4em;font-size:clamp(1.8rem,4vw,2.9rem);line-height:1.1;font-weight:700}
+  .story p{margin:0 0 .85em;font-size:clamp(1.15rem,2.1vw,1.5rem);line-height:1.6;max-width:62ch}
+  .story b{font-weight:700;background:linear-gradient(transparent 62%, rgba(255,196,0,.55) 62%)}
+  .story .speech{background:var(--paper-soft);border:3px solid var(--paper-ink);border-radius:20px;padding:.7em 1em;margin:0 0 1em}
+  .task{border:3px dashed var(--paper-ink);border-radius:18px;padding:.6em 1.1em .2em;margin:0 0 1em;background:rgba(255,255,255,.35);max-width:62ch}
+  .task h2{margin:0 0 .3em;font-size:clamp(1.3rem,2.4vw,1.8rem)}
+  .task ol{margin:0 0 .8em;padding-left:1.4em;font-size:clamp(1.15rem,2.1vw,1.5rem);line-height:1.55}
+  .task li{margin-bottom:.2em}
+  .nb{white-space:nowrap}
+  .file .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:.4em 0 1.1em}
+  .file .btn:not(.primary){background:var(--paper-soft);color:var(--paper-ink);border-color:var(--paper-ink);box-shadow:0 4px 0 var(--paper-ink)}
+
+  .opts{border-top:3px dashed var(--paper-line);padding-top:1em;margin-bottom:1.2em}
+  .picker{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:0 0 .8em}
+  .picker-label{font-weight:700;min-width:13em;font-size:1.05rem}
+  .picker button{
+    border:3px solid var(--paper-ink);background:var(--paper-soft);color:var(--paper-ink);
+    border-radius:999px;padding:.3em 1em;cursor:pointer;font-size:1.05rem;
+  }
+  .picker button[aria-checked="true"]{background:var(--paper-ink);color:var(--paper)}
+  .picker-note{margin:.2em 0 0;font-size:1rem;line-height:1.4;color:var(--paper-ink);opacity:.85;max-width:60ch}
+
+  /* ---------- Spiel: oberer Bereich ---------- */
+  .top{
+    position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
+    background:var(--bg);padding:10px clamp(10px,2.5vw,28px) 12px;border-bottom:3px solid var(--line);
+  }
+  .head{display:flex;align-items:center;gap:12px;max-width:1400px;margin:0 auto}
+  .bubble{
+    position:relative;flex:1;min-width:0;background:var(--surface);border:3px solid var(--line);
+    border-radius:18px;padding:.45em .9em;font-size:clamp(1rem,1.9vw,1.4rem);line-height:1.3;
+    transition:border-color .2s;
+  }
+  .bubble::before{
+    content:"";position:absolute;left:-11px;top:50%;width:18px;height:18px;margin-top:-9px;
+    background:inherit;border-left:3px solid;border-bottom:3px solid;border-color:inherit;transform:rotate(45deg);
+  }
+  .bubble.good{border-color:var(--good)}
+  .bubble.bad{border-color:var(--bad)}
+  .meta{display:flex;align-items:center;gap:8px;flex:none}
+  .count{font-weight:600;font-size:1.15rem;white-space:nowrap}
+  .progress{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin:10px auto 0;max-width:1400px}
+  .progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+
+  .stage{display:flex;flex-direction:column;align-items:center;gap:6px;margin:12px auto 0;max-width:1400px}
+  .wordbox{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .word-row{display:flex;align-items:center;gap:14px}
+  /* Das Wort als Beweis-Anhänger */
+  .word{
+    position:relative;min-width:min(74vw,420px);cursor:pointer;
+    font-weight:600;font-size:clamp(2.1rem,6vw,4rem);line-height:1.15;
+    padding:.14em 1em .14em 1.25em;border-radius:20px 26px 26px 20px;
+    background:var(--surface);color:var(--ink);border:4px solid var(--ink);
+    box-shadow:0 6px 0 var(--ink);transition:background .15s, transform .15s;
+  }
+  .word::before{
+    content:"";position:absolute;left:.4em;top:50%;width:.28em;height:.28em;margin-top:-.14em;
+    border-radius:50%;border:4px solid var(--ink);background:var(--bg);
+  }
+  .word.selected{background:var(--accent);color:var(--accent-ink);border-color:var(--accent-ink);box-shadow:0 6px 0 var(--accent-ink);transform:scale(1.05)}
+  .word.selected::before{border-color:var(--accent-ink)}
+  .stage-hint{font-size:clamp(.95rem,1.6vw,1.2rem);color:var(--ink-soft);min-height:1.4em;text-align:center}
+  .nextrow{
+    display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
+    background:var(--surface);border:4px solid var(--ink);border-radius:24px;padding:14px 24px;
+    box-shadow:var(--shadow);font-size:clamp(1.05rem,1.9vw,1.4rem);
+  }
+  .endbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:center;text-align:center;font-size:clamp(1rem,1.8vw,1.3rem)}
+  .endbar .btn{font-size:1rem}
+  .endbar .btn.primary{font-size:clamp(1rem,1.6vw,1.2rem);padding:.4em 1.1em}
+
+  /* ---------- Ansicht 1: vier Kisten nebeneinander ---------- */
+  .boardwrap{position:relative}
+  .cols{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,1.6vw,22px);
+    max-width:1400px;margin:0 auto;padding:clamp(12px,2vw,22px) clamp(10px,2.5vw,28px) 48px;
+  }
+  .col{
+    display:flex;flex-direction:column;min-height:min(52vh,400px);cursor:pointer;
+    background:var(--cat-soft);border:5px solid var(--cat);border-radius:24px;overflow:hidden;
+    box-shadow:var(--shadow);transition:transform .15s;
+  }
+  .col-head{
+    display:flex;align-items:center;justify-content:center;gap:.45em;
+    background:var(--cat);color:var(--on-cat);font-weight:600;font-size:clamp(1.2rem,2.5vw,2.1rem);
+    padding:.4em .5em;text-align:center;
+  }
+  .col-body{display:flex;flex-wrap:wrap;align-content:flex-start;gap:8px;padding:12px}
+  .cols.ready .col{outline:4px dashed var(--accent);outline-offset:4px}
+  .cols.ready .col:hover{transform:translateY(-5px)}
+  .col.hint{animation:glow .9s ease-in-out infinite}
+
+  /* ---------- Ansicht 2: großes Kreuz ---------- */
+  #game[data-layout="cross"]{
+    display:flex;flex-direction:column;
+    height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+    min-height:520px;
+  }
+  #game[data-layout="cross"] .top{position:static;flex:none}
+  #game[data-layout="cross"] .stage{display:none}
+  #game[data-layout="cross"].finished .stage{display:flex}
+  #game[data-layout="cross"] .boardwrap{flex:1;min-height:0;display:flex;padding:clamp(8px,1.4vw,18px)}
+  .cross{
+    flex:1;min-width:0;min-height:0;display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr);
+    gap:10px;background:var(--ink);border:6px solid var(--ink);border-radius:28px;overflow:hidden;
+  }
+  .cross .col{min-height:0;border:0;border-radius:0;box-shadow:none;overflow:auto;position:relative}
+  .cross .col-head{width:max-content;font-size:clamp(1.1rem,2.4vw,2rem);padding:.3em .9em;flex:none}
+  .cross .col-body{flex:1 0 auto}
+  .cross .col[data-pos="tl"] .col-head{align-self:flex-start;border-radius:0 0 18px 0}
+  .cross .col[data-pos="tr"] .col-head{align-self:flex-end;border-radius:0 0 0 18px}
+  .cross .col[data-pos="bl"] .col-head{align-self:flex-start;order:2;border-radius:0 18px 0 0}
+  .cross .col[data-pos="br"] .col-head{align-self:flex-end;order:2;border-radius:18px 0 0 0}
+  /* Platz lassen für das Wort in der Mitte */
+  .cross .col[data-pos="tl"] .col-body,.cross .col[data-pos="tr"] .col-body{padding-bottom:clamp(52px,9vh,80px)}
+  .cross .col[data-pos="bl"] .col-body,.cross .col[data-pos="br"] .col-body{padding-top:clamp(84px,14vh,120px)}
+  /* Wenn das Wort in der Mitte weg ist, wird dort kein Platz mehr freigehalten */
+  #game.finished .cross .col .col-body{padding-top:12px;padding-bottom:12px}
+  /* Bei vielen Wörtern werden die Wortkarten kleiner, damit alles sichtbar bleibt */
+  .cross[data-per="10"] .chip{font-size:clamp(.9rem,1.5vw,1.25rem)}
+  .cross[data-per="20"] .chip{font-size:clamp(.78rem,1.15vw,1rem);padding:.15em .6em;border-width:2px}
+  .cross[data-per="20"] .col-body{gap:5px;padding-left:8px;padding-right:8px}
+  .cross[data-per="20"].showcaps .cap{font-size:1.15em}
+  .cross .col[data-pos="tr"] .col-body,.cross .col[data-pos="br"] .col-body{justify-content:flex-end}
+  .cross.ready .col{outline:5px dashed var(--accent);outline-offset:-14px}
+  .cross .col.hint{animation:glowIn .9s ease-in-out infinite}
+
+  .center{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;
+    display:flex;justify-content:center;width:max-content;max-width:94%;pointer-events:none;
+  }
+  .center .wordbox{pointer-events:auto;position:relative}
+  .center .word{min-width:0;font-size:clamp(1.7rem,4.6vw,3.4rem)}
+  .center .word-row{position:relative}
+  .center .word-row .icon-btn.round{position:absolute;left:100%;top:50%;margin:-28px 0 0 14px}
+  .center .stage-hint{
+    position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:12px;white-space:nowrap;
+    background:var(--surface);border:3px solid var(--line);border-radius:999px;
+    padding:.05em .9em;font-size:clamp(.85rem,1.4vw,1.1rem);min-height:0;
+  }
+
+  /* ---------- Wörter in den Kisten ---------- */
+  .chip{
+    display:inline-block;padding:.28em .8em;border-radius:999px;background:var(--surface);color:var(--ink);
+    border:3px solid var(--cat);font-weight:700;font-size:clamp(1rem,1.8vw,1.4rem);line-height:1.2;
+  }
+  .chip.fly{margin:0;white-space:nowrap;display:flex;align-items:center;justify-content:center}
+  .chip.wrong{display:inline-flex;flex-direction:column;align-items:center;border-style:dashed;border-color:var(--bad);border-radius:18px;padding:.2em .8em .25em}
+  .chip small{font-size:.66em;font-weight:400;color:var(--bad);line-height:1.2}
+  .cap{display:inline}
+  .showcaps .cap{color:var(--cap);font-size:1.3em;line-height:1}
+
+  /* Zähler, wenn die Wörter nicht angezeigt werden */
+  .stash{
+    display:inline-flex;align-items:baseline;justify-content:center;gap:.4em;min-width:8em;
+    padding:.3em 1em;border:3px dashed var(--cat);border-radius:999px;background:var(--surface);
+    color:var(--ink);font-weight:700;font-size:clamp(1rem,1.8vw,1.4rem);
+  }
+  .stash .n{font-size:1.5em;line-height:1;color:var(--cat)}
+
+  /* ---------- Förderband-Fabrik ---------- */
+  #factory{
+    display:flex;flex-direction:column;
+    height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+    min-height:560px;
+  }
+  #factory .top{position:static;flex:none}
+  .top > .endbar{margin-top:10px}
+  .pill{
+    font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:600;font-size:1.05rem;
+    background:var(--surface);border:3px solid var(--line);border-radius:999px;padding:.1em .7em;white-space:nowrap;
+  }
+
+  .scene{
+    --rail-y:44px; --belt-y:290px;
+    --pw:clamp(120px,min(16vw,24vh),220px); --ph:calc(var(--pw) * .42);
+    position:relative;flex:1;min-height:0;overflow:hidden;isolation:isolate;
+    background:linear-gradient(180deg,var(--wall-a),var(--wall-b));
+  }
+  .scene::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:
+      repeating-linear-gradient(90deg,transparent 0 179px,var(--wall-line) 179px 181px),
+      repeating-linear-gradient(0deg,transparent 0 139px,var(--wall-line) 139px 141px);
+  }
+  .probe{position:absolute;left:0;top:0;width:var(--pw);height:1px;visibility:hidden;pointer-events:none}
+  .cogs{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .cog{position:absolute;fill:#fff;opacity:.17;animation:spin 40s linear infinite}
+  .cog.c1{left:-60px;top:36%}
+  .cog.c2{right:7%;top:12%;animation-duration:28s;animation-direction:reverse}
+  .cog.c3{left:36%;top:8%;animation-duration:22s}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .ceiling{
+    position:absolute;left:0;right:0;top:0;height:calc(var(--rail-y) - 4px);z-index:1;
+    background:linear-gradient(#2b3245,#3b4562);box-shadow:0 4px 0 rgba(0,0,0,.22);
+  }
+  .rail{
+    position:absolute;left:0;right:0;top:var(--rail-y);height:14px;z-index:1;
+    background:repeating-linear-gradient(135deg,#ffcf33 0 12px,#252a37 12px 24px);
+    border-top:3px solid #252a37;border-bottom:3px solid #252a37;
+  }
+  .sign{
+    position:absolute;left:clamp(12px,3vw,40px);top:calc(var(--rail-y) + 44px);z-index:1;
+    background:#1c2233;color:#ffd84d;border:4px solid #ffd84d;border-radius:14px;padding:.2em .8em;
+    font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:700;font-size:clamp(1rem,2.1vw,1.7rem);
+    text-shadow:0 0 12px rgba(255,216,77,.75);box-shadow:0 0 0 4px #1c2233,0 0 28px rgba(255,216,77,.35);
+  }
+  .lamp{
+    position:absolute;right:clamp(12px,3vw,40px);top:calc(var(--rail-y) + 40px);z-index:1;display:flex;gap:9px;
+    background:#1c2233;padding:9px 12px;border-radius:16px;box-shadow:0 4px 0 rgba(0,0,0,.25);
+  }
+  .lamp .l{display:block;width:24px;height:24px;border-radius:50%;transition:background .15s,box-shadow .15s}
+  .lamp .l.r{background:#5a2a33}
+  .lamp .l.g{background:#1f4a35}
+  .lamp .l.r.on{background:#ff4d5e;box-shadow:0 0 18px 6px rgba(255,77,94,.75)}
+  .lamp .l.g.on{background:#3ddc84;box-shadow:0 0 18px 6px rgba(61,220,132,.75)}
+  .pipe{
+    position:absolute;left:0;right:0;top:calc(var(--belt-y) + 104px);height:16px;z-index:0;
+    background:linear-gradient(#c5d0e6,#8fa0c0 60%,#6d7fa3);box-shadow:0 3px 0 rgba(0,0,0,.18);
+  }
+  .pipe::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 150px,rgba(0,0,0,.25) 150px 156px)}
+  .floor{
+    position:absolute;left:0;right:0;bottom:0;height:22px;z-index:0;
+    background:repeating-linear-gradient(135deg,#ffcf33 0 12px,#252a37 12px 24px);border-top:4px solid #252a37;
+  }
+
+  /* Förderband */
+  .belt{position:absolute;left:-14px;right:-14px;top:var(--belt-y);height:60px;z-index:2;--bx:0px;--rot:0}
+  .belt-top{
+    position:absolute;left:0;right:0;top:0;height:22px;border-radius:11px 11px 0 0;
+    background:repeating-linear-gradient(90deg,#55618a 0 8px,#2c3449 8px 56px);
+    background-position-x:var(--bx);box-shadow:inset 0 3px 0 rgba(255,255,255,.2);
+  }
+  .belt-body{position:absolute;left:0;right:0;top:22px;height:38px;background:linear-gradient(#262d42,#171c2b);border-radius:0 0 19px 19px}
+  .belt::after{
+    content:"";position:absolute;left:0;right:0;top:100%;height:40px;
+    background:repeating-linear-gradient(90deg,#252b3c 0 16px,transparent 16px 230px);background-position-x:70px;
+  }
+  .drum{
+    position:absolute;top:1px;width:58px;height:58px;border-radius:50%;border:5px solid #1c2233;
+    background:conic-gradient(#7b86a6 0 25%,#4c5779 0 50%,#7b86a6 0 75%,#4c5779 0);
+    transform:rotate(calc(var(--rot) * 1deg));
+  }
+  .drum.dl{left:-6px} .drum.dr{right:-6px}
+
+  /* Pakete */
+  .pkgs{position:absolute;inset:0;pointer-events:none}
+  .pkg{position:absolute;left:0;top:0;width:var(--pw);height:var(--ph);z-index:3;pointer-events:none;will-change:transform}
+  .pkg .box{
+    position:relative;width:100%;height:100%;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(180deg,rgba(255,255,255,.24),transparent 38%),var(--card,#c99a5b);
+    border:3px solid rgba(60,36,10,.55);box-shadow:0 5px 0 rgba(0,0,0,.28);transition:box-shadow .15s;
+  }
+  .pkg .box::before{content:"";position:absolute;left:0;right:0;top:0;height:15%;background:rgba(0,0,0,.11);border-bottom:2px solid rgba(60,36,10,.3);border-radius:9px 9px 0 0}
+  .pkg .box::after{content:"";position:absolute;left:50%;top:0;width:17%;height:15%;transform:translateX(-50%);background:rgba(255,238,196,.75)}
+  .pkg .lab{
+    position:relative;z-index:1;margin-top:8%;background:#fff;color:#14213d;border-radius:8px;padding:.12em .5em;
+    font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:600;line-height:1.15;white-space:nowrap;
+    box-shadow:0 0 0 2px rgba(60,36,10,.3);
+  }
+  .pkg.active .box{box-shadow:0 0 0 4px var(--accent),0 0 30px 8px rgba(255,196,0,.6)}
+  .pkg.active::after{
+    content:"";position:absolute;left:50%;top:-26px;margin-left:-12px;
+    border:12px solid transparent;border-top-color:var(--accent);border-bottom:0;animation:bob .8s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+  /* Roboterarm */
+  .arm{position:absolute;left:0;top:0;width:0;height:0;z-index:5;pointer-events:none;will-change:transform}
+  .trolley{
+    position:absolute;left:-38px;top:calc(var(--rail-y) - 8px);width:76px;height:32px;border-radius:10px;
+    background:linear-gradient(#ffd84d,#e0a800);border:3px solid #252a37;box-shadow:0 3px 0 rgba(0,0,0,.3);
+  }
+  .trolley::before,.trolley::after{content:"";position:absolute;top:-8px;width:16px;height:16px;border-radius:50%;background:#252a37;border:3px solid #6b7794}
+  .trolley::before{left:8px} .trolley::after{right:8px}
+  .cable{
+    position:absolute;left:-3px;top:calc(var(--rail-y) + 24px);width:6px;height:14px;border-radius:3px;
+    background:repeating-linear-gradient(180deg,#3b4258 0 6px,#66708d 6px 12px);
+  }
+  .claw{position:absolute;left:calc(var(--pw) / -2 - 10px);top:calc(var(--rail-y) + 24px);width:calc(var(--pw) + 20px);height:66px;--open:0}
+  .claw .bar{
+    position:absolute;left:0;right:0;top:0;height:16px;border-radius:8px;
+    background:linear-gradient(#66708d,#3b4258);border:3px solid #252a37;
+  }
+  .prong{
+    position:absolute;top:10px;width:10px;height:54px;border:2px solid #252a37;border-radius:4px 4px 7px 7px;
+    background:linear-gradient(90deg,#7b86a6,#3b4258);transform-origin:50% 0;
+  }
+  .prong::after{content:"";position:absolute;left:-2px;right:-2px;bottom:-2px;height:10px;border-radius:0 0 7px 7px;background:#ffd84d;border:2px solid #252a37}
+  .prong.l{left:0;transform:rotate(calc(var(--open) * 28deg))}
+  .prong.r{right:0;transform:rotate(calc(var(--open) * -28deg))}
+
+  /* Kisten */
+  .crates{
+    position:absolute;left:0;right:0;bottom:22px;height:clamp(150px,30%,290px);
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,2vw,28px);padding:0 clamp(10px,2.5vw,34px);
+  }
+  .crate{position:relative;cursor:pointer;touch-action:manipulation;border-radius:14px}
+  .crate-back{position:absolute;inset:0;z-index:2;border-radius:10px 10px 0 0;background:var(--cat)}
+  .crate-back::after{content:"";position:absolute;left:8px;right:8px;top:6px;height:28px;background:#0d1320;border-radius:6px 6px 0 0}
+  .crate-front{
+    position:absolute;left:0;right:0;top:30px;bottom:0;z-index:4;border-radius:8px 8px 14px 14px;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.16),transparent 32%),
+      repeating-linear-gradient(90deg,transparent 0 58px,rgba(0,0,0,.15) 58px 63px),
+      var(--cat);
+    box-shadow:inset 0 0 0 4px rgba(0,0,0,.24),0 8px 0 rgba(0,0,0,.28);
+  }
+  .crate-front::before{
+    content:"";position:absolute;left:-7px;right:-7px;top:-9px;height:18px;border-radius:8px;
+    background:linear-gradient(rgba(255,255,255,.42),rgba(255,255,255,.18)),var(--cat);
+    box-shadow:inset 0 0 0 3px rgba(0,0,0,.22);
+  }
+  .crate .plate{
+    position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:.4em;white-space:nowrap;
+    background:#fff;color:#14213d;border-radius:14px;padding:.22em .8em;box-shadow:0 4px 0 rgba(0,0,0,.28);
+    font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:600;font-size:clamp(1.05rem,2.3vw,2rem);
+  }
+  .crate .plate .ico{font-size:1.25em}
+  .crate-count{
+    position:absolute;right:-6px;top:6px;z-index:5;min-width:2.3em;height:2.3em;padding:0 .4em;border-radius:999px;
+    display:grid;place-items:center;background:#fff;color:#14213d;border:4px solid var(--cat);
+    font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:700;font-size:clamp(1rem,1.8vw,1.5rem);
+  }
+  .crate:hover .crate-front{filter:brightness(1.1)}
+  .crate.wobble .crate-front,.crate.wobble .crate-back{animation:shake .45s}
+  .crate.bounce .crate-front,.crate.bounce .crate-back{animation:crateBounce .45s}
+  .crate.hint .crate-front{animation:glow .9s ease-in-out infinite}
+  @keyframes crateBounce{0%{transform:translateY(0)}30%{transform:translateY(11px)}60%{transform:translateY(-4px)}100%{transform:translateY(0)}}
+  .pkg .box.shake{animation:shake .45s}
+
+  .spark{position:absolute;z-index:6;width:11px;height:11px;border-radius:50%;pointer-events:none}
+  .float{
+    position:absolute;z-index:6;pointer-events:none;color:#fff;transform:translate(-50%,-50%);
+    font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:700;font-size:1.7rem;
+    text-shadow:0 2px 0 rgba(0,0,0,.55),0 0 10px rgba(0,0,0,.35);
+  }
+  .rotate-note{display:none}
+
+  /* Duell: zwei Teams spielen gegeneinander */
+  .pill.ta{border-color:var(--teamA)}
+  .pill.tb{border-color:var(--teamB)}
+  .crates.duel{
+    height:clamp(200px,36%,330px);
+    grid-template-columns:minmax(0,1fr) calc(var(--pw) + 28px) minmax(0,1fr);
+    gap:clamp(8px,1.4vw,20px);align-items:stretch;
+  }
+  [data-cat="fertig"]{--cat:#66708d;--cat-soft:#dbe1f0}
+  .crate.hatch{cursor:default}
+  .crate.hatch:hover .crate-front{filter:none}
+  .crate.hatch .plate{font-size:clamp(.9rem,1.7vw,1.4rem);padding:.2em .6em}
+  .team{
+    --team:var(--teamA);--on-team:var(--on-teamA);
+    position:relative;display:flex;flex-direction:column;min-width:0;
+    background:var(--surface);border:5px solid var(--team);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);
+  }
+  .team[data-team="b"]{--team:var(--teamB);--on-team:var(--on-teamB)}
+  .team-head{
+    display:flex;align-items:center;justify-content:space-between;gap:.5em;padding:.2em .5em .2em .9em;
+    background:var(--team);color:var(--on-team);
+    font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:700;font-size:clamp(1rem,2.1vw,1.7rem);
+  }
+  .team-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .team-score{min-width:1.9em;text-align:center;background:#fff;color:#14213d;border-radius:999px;padding:0 .5em;font-size:1.1em}
+  .team-btns{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(6px,.9vw,12px);padding:clamp(6px,.9vw,12px)}
+  .tbtn{
+    position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15em;
+    min-width:0;padding:.2em;border:0;border-radius:16px;cursor:pointer;touch-action:manipulation;
+    background:var(--cat);color:var(--on-cat);
+    font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:600;
+    box-shadow:inset 0 0 0 4px rgba(0,0,0,.2),0 5px 0 rgba(0,0,0,.28);
+    transition:transform .1s,opacity .15s,box-shadow .15s;
+  }
+  .tbtn .ti{font-size:clamp(1.7rem,3.8vw,3.2rem);line-height:1}
+  .tbtn .tn{font-size:clamp(.72rem,1.45vw,1.25rem);line-height:1.1;text-align:center;overflow-wrap:anywhere}
+  .team:not(.ready) .tbtn{opacity:.42;pointer-events:none}
+  .team.ready .tbtn:hover{transform:translateY(-3px)}
+  .team-lock{
+    position:absolute;inset:0;z-index:2;display:none;align-items:center;justify-content:center;text-align:center;padding:.5em;
+    font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:700;font-size:clamp(1rem,2vw,1.6rem);color:var(--ink);
+  }
+  .team-lock::before{content:"";position:absolute;inset:0;background:var(--surface);opacity:.88}
+  .team-lock span{position:relative}
+  .team.done .team-lock{display:flex}
+  .team .tbtn.right{opacity:1;box-shadow:0 0 0 5px #fff,0 0 0 10px #16a34a,0 6px 0 rgba(0,0,0,.3)}
+  .team .tbtn.wrong{opacity:1;box-shadow:0 0 0 5px #fff,0 0 0 10px #dc2626,0 6px 0 rgba(0,0,0,.3)}
+  .team .tbtn.answer{opacity:1;animation:glow .9s ease-in-out infinite}
+  .tbtn.right::after,.tbtn.wrong::after{
+    position:absolute;top:-10px;right:-10px;width:1.9em;height:1.9em;border-radius:50%;display:grid;place-items:center;
+    color:#fff;font-size:1.05rem;font-weight:700;box-shadow:0 2px 0 rgba(0,0,0,.3);
+  }
+  .tbtn.right::after{content:"✓";background:#16a34a}
+  .tbtn.wrong::after{content:"✗";background:#dc2626}
+  .picker.names{gap:8px 16px}
+  .picker.wide .picker-label,.picker.names .picker-label{min-width:100%}
+  .nm{display:flex;align-items:center;gap:.4em;font-size:1rem}
+  .nm input{
+    width:9.5em;font:inherit;padding:.25em .6em;border:3px solid var(--paper-ink);border-radius:12px;
+    background:var(--paper-soft);color:var(--paper-ink);
+  }
+
+  /* Duell auf Zeit */
+  .pill.timer{border-color:var(--ink);min-width:4.8em;text-align:center;font-variant-numeric:tabular-nums}
+  .pill.timer.idle{opacity:.7}
+  .pill.timer.urgent{background:#dc2626;border-color:#dc2626;color:#fff;animation:urgentPulse .8s ease-in-out infinite}
+  @keyframes urgentPulse{50%{transform:scale(1.08)}}
+  .col-head .cnt{
+    margin-left:.5em;min-width:1.6em;text-align:center;background:#fff;color:#14213d;border-radius:999px;
+    padding:0 .5em;font-size:.72em;line-height:1.5;
+  }
+  .dp-stat{margin:.1em 0 0;font-size:clamp(.9rem,1.5vw,1.1rem);color:var(--ink-soft)}
+
+  /* Duell: Überblick am Ende */
+  .dp-sub{margin:.15em 0 0;font-family:'Fredoka','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;font-weight:600;font-size:clamp(1.1rem,2.3vw,1.7rem)}
+  .dp-actions{display:flex;flex-wrap:wrap;gap:10px}
+  .panel .btn:not(.primary){background:var(--surface);color:var(--ink);border-color:var(--ink);box-shadow:0 4px 0 var(--ink)}
+  .dp-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:.9em 0 .3em}
+  .dp-tabs button{
+    border:3px solid var(--ink);background:var(--surface);color:var(--ink);border-radius:999px;
+    padding:.3em 1.1em;cursor:pointer;font:inherit;font-size:1.05rem;
+  }
+  .dp-tabs button[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+  .dp-tabs button[data-view="a"]{border-color:var(--teamA)}
+  .dp-tabs button[data-view="b"]{border-color:var(--teamB)}
+  .dp-tabs button[data-view="a"][aria-selected="true"]{background:var(--teamA);color:var(--on-teamA)}
+  .dp-tabs button[data-view="b"][aria-selected="true"]{background:var(--teamB);color:var(--on-teamB)}
+  .dp-info{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin:0;font-size:clamp(.95rem,1.6vw,1.2rem);color:var(--ink-soft)}
+  .dp-legend{display:inline-flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+  .dp-legend span.it{display:inline-flex;align-items:center;gap:.35em;color:var(--ink)}
+  .mk{
+    display:inline-grid;place-items:center;flex:none;width:1.35em;height:1.35em;margin-left:.4em;border-radius:50%;
+    font-size:.72em;font-weight:700;line-height:1;font-family:system-ui,sans-serif;
+  }
+  .dp-legend .mk{margin-left:0;font-size:.95em}
+  .mk.a{--tc:var(--teamA);--on-tc:var(--on-teamA)}
+  .mk.b{--tc:var(--teamB);--on-tc:var(--on-teamB)}
+  .mk.ok{background:var(--tc);color:var(--on-tc)}
+  .mk.bad{background:#fff;color:#dc2626;box-shadow:0 0 0 2px #dc2626}
+  .mk.bad.a,.mk.bad.b{box-shadow:0 0 0 2px #dc2626,0 0 0 4px var(--tc)}
+  #duelPanel .panel{width:min(1400px,100%)}
+  #dpCols .col-body{align-items:flex-start}
+  #dpCols .col-head{font-size:clamp(1rem,1.9vw,1.6rem);gap:.35em;padding:.4em .4em}
+  #dpCols .chip{max-width:100%;font-size:clamp(.95rem,1.3vw,1.2rem)}
+  #dpCols .chip .w{min-width:0;overflow-wrap:anywhere}
+  #dpCols .chip:not(.wrong){display:inline-flex;align-items:center}
+  .dp-note{margin:.8em 0 0;font-size:clamp(1rem,1.7vw,1.3rem);line-height:1.5}
+  .dp-note b{background:linear-gradient(transparent 62%, rgba(255,196,0,.6) 62%)}
+  .dp-note .red{color:var(--cap);font-weight:700}
+
+  /* Übersicht der Kisten am Ende */
+  .panel{width:min(1200px,100%);background:var(--bg);color:var(--ink);border:4px solid var(--ink);border-radius:26px;padding:clamp(12px,2vw,22px);box-shadow:var(--shadow)}
+  .panel-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+  .panel-head h2{margin:0;font-size:clamp(1.4rem,3vw,2.1rem)}
+  .panel .cols{padding:14px 0 4px;max-width:none}
+  .panel .col{cursor:default;min-height:170px}
+
+  /* ---------- Ergebnis-Fenster ---------- */
+  .overlay{position:fixed;inset:0;z-index:100;display:flex;background:rgba(8,12,28,.62);padding:16px;overflow:auto}
+  .overlay > *{margin:auto}
+  .dialog{
+    width:100%;max-width:660px;background:var(--paper);color:var(--paper-ink);
+    border:4px solid var(--paper-ink);border-radius:28px;padding:clamp(18px,3.5vw,34px);text-align:center;box-shadow:var(--shadow);
+  }
+  .dialog h2{margin:0;font-size:clamp(1.8rem,4vw,2.6rem)}
+  .stars{font-size:clamp(2.4rem,6vw,3.6rem);letter-spacing:.1em;line-height:1.1;margin:.1em 0}
+  .star{color:var(--paper-line)}
+  .star.on{color:#f2a900;text-shadow:0 2px 0 rgba(43,36,16,.35)}
+  .dialog p{margin:.4em 0}
+  .rule{background:var(--paper-soft);border:3px dashed var(--paper-ink);border-radius:18px;padding:.6em 1em;margin:.9em 0;font-size:clamp(1.1rem,2vw,1.4rem);line-height:1.5}
+  .rule b{background:linear-gradient(transparent 62%, rgba(255,196,0,.6) 62%)}
+  .ask{font-size:clamp(1.05rem,1.9vw,1.3rem)}
+  .ask .red{color:#c0182b;font-weight:700}
+  .dialog .row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:1em}
+  .dialog .btn:not(.primary){background:var(--paper-soft);color:var(--paper-ink);border-color:var(--paper-ink);box-shadow:0 4px 0 var(--paper-ink)}
+
+  .confetti{position:fixed;top:-40px;font-size:26px;pointer-events:none;z-index:200}
+
+  /* ---------- Bewegung ---------- */
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-7px)}80%{transform:translateX(7px)}}
+  @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+  @keyframes glow{0%,100%{box-shadow:0 0 0 4px var(--accent),var(--shadow)}50%{box-shadow:0 0 0 13px var(--accent),var(--shadow)}}
+  @keyframes glowIn{0%,100%{box-shadow:inset 0 0 0 4px var(--accent)}50%{box-shadow:inset 0 0 0 16px var(--accent)}}
+  .shake{animation:shake .45s}
+  .pop{animation:pop .4s}
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+
+  /* ---------- Kleine Bildschirme ---------- */
+  @media (max-width:760px){
+    .intro-grid{grid-template-columns:1fr}
+    .left{padding-top:8px}
+    .det-big{max-width:230px}
+    .picker-label{min-width:100%}
+    .cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .col{min-height:200px}
+    .head{flex-wrap:wrap}
+    .bubble{flex:1 1 100%;order:3}
+    .meta{margin-left:auto}
+    .center .word-row .icon-btn.round{width:44px;height:44px;font-size:1.1rem;margin-top:-22px}
+  }
+  @media (max-width:640px) and (orientation:portrait){
+    .rotate-note{display:block;position:absolute;left:50%;top:calc(var(--rail-y) + 30px);transform:translateX(-50%);z-index:6;background:var(--accent);color:var(--accent-ink);border:3px solid var(--accent-ink);border-radius:999px;padding:.2em .9em;font-weight:700;white-space:nowrap}
+  }
+  @media (max-height:600px){ .top{position:static} }
+</style>
+</head>
+<body>
+
+<!-- ===================== STARTSEITE / AUFTRAG ===================== -->
+<main id="intro">
+  <div class="wrap">
+    <div class="intro-grid">
+      <div class="left">
+        <div class="det det-big" id="detBig"></div>
+        <div class="tools">
+          <label class="linkbtn">Eigenes Roboter-Bild wählen<input type="file" id="pickImg" accept="image/*" hidden></label>
+          <button class="linkbtn" id="resetImg" type="button">Zurücksetzen</button>
+        </div>
+      </div>
+
+      <section class="file" aria-labelledby="storyTitle">
+        <div class="tab">Auftrag für heute</div>
+        <div class="story" id="story">
+          <h1 id="storyTitle">Hilfe in der <span class="nb">Nomen-Fabrik! 🏭</span></h1>
+          <p class="speech">Hallo, liebe Kinder! Ich bin <b>Sorti</b>, der Roboter. Ich arbeite in der Nomen-Fabrik und brauche eure Hilfe. Heute müssen alle Nomen sortiert werden. Allein schaffe ich das nicht. Bitte helft mir!</p>
+          <div class="task">
+            <h2>Eure Aufgabe</h2>
+            <p>Vier Kisten warten auf die Nomen: eine für <b>Menschen</b>, eine für <b>Tiere</b>, eine für <b>Pflanzen</b> und eine für <b>Dinge</b>.</p>
+            <ol>
+              <li>Lest das Wort.</li>
+              <li>Überlegt: Ist es ein Mensch, ein Tier, eine Pflanze oder ein Ding?</li>
+              <li>Entscheidet, in welche Kiste das Wort gehört, und tippt sie an.</li>
+            </ol>
+            <p>Seid ihr bereit?</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="readBtn" type="button">🔊 Auftrag vorlesen</button>
+        </div>
+
+        <div class="opts">
+          <div class="picker wide" role="radiogroup" aria-labelledby="l-mode" data-key="mode">
+            <span class="picker-label" id="l-mode">Spiel</span>
+            <button type="button" role="radio" aria-checked="true" data-value="belt">Förderband-Fabrik</button>
+            <button type="button" role="radio" aria-checked="false" data-value="duel">Förderband-Duell (2 Teams)</button>
+            <button type="button" role="radio" aria-checked="false" data-value="sort">Sortieren</button>
+          </div>
+          <div class="picker" role="radiogroup" aria-labelledby="l-per" data-key="per" id="perPicker">
+            <span class="picker-label" id="l-per">Wörter pro Kategorie</span>
+            <button type="button" role="radio" aria-checked="true" data-value="7">7</button>
+            <button type="button" role="radio" aria-checked="false" data-value="10">10</button>
+            <button type="button" role="radio" aria-checked="false" data-value="20">20</button>
+          </div>
+          <div class="picker wide" role="radiogroup" aria-labelledby="l-time" data-key="time" data-for="duel" hidden>
+            <span class="picker-label" id="l-time">Spielzeit</span>
+            <button type="button" role="radio" aria-checked="true" data-value="0">Ohne Zeit</button>
+            <button type="button" role="radio" aria-checked="false" data-value="60">1 Minute</button>
+            <button type="button" role="radio" aria-checked="false" data-value="120">2 Minuten</button>
+            <button type="button" role="radio" aria-checked="false" data-value="180">3 Minuten</button>
+          </div>
+          <div class="picker" role="radiogroup" aria-labelledby="l-tempo" data-key="tempo" data-for="belt">
+            <span class="picker-label" id="l-tempo">Tempo</span>
+            <button type="button" role="radio" aria-checked="true" data-value="calm">Gemütlich</button>
+            <button type="button" role="radio" aria-checked="false" data-value="mid">Mittel</button>
+            <button type="button" role="radio" aria-checked="false" data-value="fast">Schnell</button>
+          </div>
+          <div class="picker names" data-for="duel" hidden>
+            <span class="picker-label">Teamnamen</span>
+            <label class="nm">links <input id="nameA" type="text" maxlength="14" value="Team Sonne" autocomplete="off"></label>
+            <label class="nm">rechts <input id="nameB" type="text" maxlength="14" value="Team Mond" autocomplete="off"></label>
+          </div>
+          <div class="picker" role="radiogroup" aria-labelledby="l-layout" data-key="layout" data-for="sort" hidden>
+            <span class="picker-label" id="l-layout">Ansicht</span>
+            <button type="button" role="radio" aria-checked="true" data-value="columns">Vier Kisten nebeneinander</button>
+            <button type="button" role="radio" aria-checked="false" data-value="cross">Großes Kreuz</button>
+          </div>
+          <div class="picker" role="radiogroup" aria-labelledby="l-reveal" data-key="reveal" data-for="sort" hidden>
+            <span class="picker-label" id="l-reveal">Sortierte Wörter</span>
+            <button type="button" role="radio" aria-checked="true" data-value="now">Sofort sehen</button>
+            <button type="button" role="radio" aria-checked="false" data-value="end">Erst am Ende sehen</button>
+          </div>
+          <p class="picker-note" id="modeNote" aria-live="polite"></p>
+        </div>
+
+        <button class="btn primary" id="startBtn" type="button">Los geht’s! 🤖</button>
+      </section>
+    </div>
+  </div>
+</main>
+
+<!-- ===================== SPIEL ===================== -->
+<main id="game" hidden data-layout="columns">
+  <div class="top">
+    <div class="head">
+      <div class="det small" id="detSmall"></div>
+      <div class="bubble" id="say" aria-live="polite"></div>
+      <div class="meta">
+        <span class="count" id="count"></span>
+        <button class="icon-btn sound-btn" id="soundBtn" type="button" aria-pressed="true" aria-label="Töne an oder aus">🎵</button>
+        <button class="icon-btn reset-btn" id="resetBtn" type="button">↩ Neu</button>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="fill"></i></div>
+
+    <div class="stage" id="stage">
+      <!-- Das Wort: liegt in der Spalten-Ansicht hier, im Kreuz genau in der Mitte -->
+      <div class="wordbox" id="wordBox">
+        <div class="word-row" id="wordRow">
+          <button class="word" id="wordBtn" type="button"><span id="wordText"></span></button>
+          <button class="icon-btn round" id="wordSpeak" type="button" aria-label="Wort vorlesen">🔊</button>
+        </div>
+        <div class="stage-hint" id="stageHint"></div>
+        <div class="nextrow" id="nextRow" hidden>
+          <span>Alle Wörter sind sortiert!</span>
+          <button class="btn primary" id="nextBtn" type="button">Weiter</button>
+        </div>
+      </div>
+
+      <div class="endbar" id="endBar" hidden>
+        <span id="endText"></span>
+        <button class="btn primary" id="barReveal" type="button">Auflösung zeigen</button>
+        <button class="btn" id="barResult" type="button">Ergebnis</button>
+        <button class="btn" id="barAgain" type="button">Nochmal spielen</button>
+        <button class="btn" id="barIntro" type="button">Zum Start</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="boardwrap" id="boardWrap">
+    <div id="board" class="cols"></div>
+    <div class="center" id="center" hidden></div>
+  </div>
+</main>
+
+<!-- ===================== FÖRDERBAND-FABRIK ===================== -->
+<main id="factory" hidden>
+  <div class="top">
+    <div class="head">
+      <div class="det small"></div>
+      <div class="bubble" id="fSay" aria-live="polite"></div>
+      <div class="meta">
+        <span class="pill timer idle" id="fTimer" hidden>⏱ 0:00</span>
+        <span class="pill" id="fScore">⭐ 0</span>
+        <span class="pill tb" id="fScoreB" hidden></span>
+        <span class="pill" id="fStreak" hidden>🔥 0</span>
+        <span class="count" id="fCount"></span>
+        <button class="icon-btn" id="fSpeak" type="button" aria-label="Wort vorlesen">🔊</button>
+        <button class="icon-btn sound-btn" type="button" aria-pressed="true" aria-label="Töne an oder aus">🎵</button>
+        <button class="icon-btn reset-btn" type="button">↩ Neu</button>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="fFill"></i></div>
+    <div class="endbar" id="fEnd" hidden>
+      <span id="fEndText">🎉 Feierabend! Alle Nomen sind sortiert.</span>
+      <button class="btn primary" id="fCrates" type="button">Kisten ansehen</button>
+      <button class="btn" id="fResult" type="button">Ergebnis</button>
+      <button class="btn" id="fAgain" type="button">Nochmal spielen</button>
+      <button class="btn" id="fIntro" type="button">Zum Start</button>
+    </div>
+  </div>
+
+  <div class="scene" id="scene">
+    <div class="cogs" id="cogs" aria-hidden="true"></div>
+    <div class="ceiling"></div>
+    <div class="sign" aria-hidden="true">Nomen-Fabrik</div>
+    <div class="lamp" aria-hidden="true"><i class="l r"></i><i class="l g"></i></div>
+    <div class="pipe" aria-hidden="true"></div>
+    <div class="rail" aria-hidden="true"></div>
+    <div class="arm" id="arm" aria-hidden="true">
+      <div class="trolley"></div>
+      <div class="cable" id="cable"></div>
+      <div class="claw" id="claw"><div class="bar"></div><i class="prong l"></i><i class="prong r"></i></div>
+    </div>
+    <div class="belt" id="belt" aria-hidden="true">
+      <div class="belt-top"></div><div class="belt-body"></div><i class="drum dl"></i><i class="drum dr"></i>
+    </div>
+    <div class="pkgs" id="pkgs" aria-hidden="true"></div>
+    <div class="crates" id="crates"></div>
+    <div class="floor" aria-hidden="true"></div>
+    <div class="rotate-note">Dreh das Gerät ins Querformat</div>
+    <div class="probe" id="pwProbe"></div>
+  </div>
+</main>
+
+<!-- ===================== ERGEBNIS ===================== -->
+<div id="overlay" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="ovTitle">
+  <div class="dialog">
+    <h2 id="ovTitle">Geschafft! 🎉</h2>
+    <div class="stars" id="stars" aria-hidden="true"></div>
+    <p id="ovScore"></p>
+    <div class="rule">
+      <p>Menschen, Tiere, Pflanzen und Dinge haben Namen. Diese Wörter heißen <b>Nomen</b>. Nomen schreibt man <b>groß</b>.</p>
+    </div>
+    <p class="ask">Schau dir die <span class="red">roten Buchstaben</span> an. Was fällt dir auf?</p>
+    <div class="row">
+      <button class="btn primary" id="ovLook" type="button">🔎 Alles ansehen</button>
+      <button class="btn" id="ovCrates" type="button" hidden>Kisten ansehen</button>
+      <button class="btn" id="ovAgain" type="button">Nochmal spielen</button>
+    </div>
+  </div>
+</div>
+
+<div id="duelPanel" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="dpTitle">
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2 id="dpTitle">Überblick</h2>
+        <p class="dp-sub" id="dpSub"></p>
+        <p class="dp-stat" id="dpStat"></p>
+      </div>
+      <div class="dp-actions">
+        <button class="btn" id="dpAgain" type="button">Nochmal spielen</button>
+        <button class="btn primary mid" id="dpHome" type="button">🏠 Zurück zum Start</button>
+      </div>
+    </div>
+    <div class="dp-tabs" id="dpTabs" role="tablist" aria-label="Ansicht wählen">
+      <button type="button" role="tab" data-view="sol" aria-selected="true">Lösung</button>
+      <button type="button" role="tab" data-view="a" aria-selected="false" id="dpTabA"></button>
+      <button type="button" role="tab" data-view="b" aria-selected="false" id="dpTabB"></button>
+    </div>
+    <p class="dp-info" id="dpInfo"></p>
+    <div class="cols showcaps" id="dpCols"></div>
+    <p class="dp-note">Menschen, Tiere, Pflanzen und Dinge haben Namen. Diese Wörter heißen <b>Nomen</b>. Nomen schreibt man <b>groß</b>. Schau auf die <span class="red">roten Buchstaben</span>: Was fällt dir auf?</p>
+  </div>
+</div>
+
+<div id="cratePanel" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="cpTitle">
+  <div class="panel">
+    <div class="panel-head">
+      <h2 id="cpTitle">Das lag in den Kisten</h2>
+      <button class="btn primary mid" id="cpClose" type="button">Zurück</button>
+    </div>
+    <div class="cols showcaps" id="cpCols"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* =====================================================
+     WÖRTER: hier kannst du Wörter ändern, streichen oder ergänzen.
+     Pro Kategorie stehen 20 Wörter für die 2. Klasse bereit.
+     Bei 7 oder 10 Wörtern pro Kategorie werden sie zufällig ausgewählt.
+     ===================================================== */
+  const WORDS = {
+    menschen: ['Mama','Papa','Bruder','Schwester','Baby','Tante','Kind','Lehrerin','Schüler','Freundin',
+               'Nachbar','Arzt','Polizist','Koch','Pilot','Fußballer','Prinzessin','Pirat','Clown','König'],
+    tiere:    ['Katze','Kuh','Pferd','Schaf','Schwein','Ente','Huhn','Frosch','Fisch','Igel',
+               'Elefant','Löwe','Affe','Schlange','Biene','Spinne','Schnecke','Hamster','Giraffe','Pinguin'],
+    pflanzen: ['Sonnenblume','Gänseblümchen','Löwenzahn','Kaktus','Apfelbaum','Kirschbaum','Eiche','Birke','Ahorn','Hecke',
+               'Farn','Moos','Klee','Efeu','Lilie','Krokus','Veilchen','Mohnblume','Bambus','Kornblume'],
+    dinge:    ['Stuhl','Bett','Ball','Stift','Schere','Kleber','Heft','Tafel','Ranzen','Lineal',
+               'Roller','Fahrrad','Schuh','Mütze','Tasse','Teller','Löffel','Uhr','Fenster','Schlüssel']
+  };
+
+  const CATS = [
+    { key:'menschen', label:'Menschen', dat:'Menschen', icon:'🧒' },
+    { key:'tiere',    label:'Tiere',    dat:'Tieren',   icon:'🐝' },
+    { key:'pflanzen', label:'Pflanzen', dat:'Pflanzen', icon:'🌹' },
+    { key:'dinge',    label:'Dinge',    dat:'Dingen',   icon:'🎒' }
+  ];
+  /* Reihenfolge im Kreuz: oben links, oben rechts, unten links, unten rechts */
+  const CROSS = [
+    { key:'tiere',    pos:'tl' },
+    { key:'menschen', pos:'tr' },
+    { key:'dinge',    pos:'bl' },
+    { key:'pflanzen', pos:'br' }
+  ];
+
+  const PRAISE = ['Super!','Genau!','Richtig!','Gut gemacht!','Stark ermittelt!','Volltreffer!'];
+  const NOTED  = ['Notiert!','Verstanden!','Gut, weiter!','Ist eingepackt!'];
+  const WRONG  = ['Hmm, das passt nicht. Denk noch einmal nach!',
+                  'Fast! Schau dir das Wort noch einmal genau an.',
+                  'Nicht ganz. Ist es ein Mensch, ein Tier, eine Pflanze oder ein Ding?'];
+
+  /* ---------- Einstellungen (Startseite) ---------- */
+  const cfg = { mode: 'belt', per: 7, layout: 'columns', reveal: 'now', tempo: 'calm', time: 0 };
+
+  /* ---------- Hilfsfunktionen ---------- */
+  const $ = (s, r = document) => r.querySelector(s);
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const catOf = key => CATS.find(c => c.key === key);
+  function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+  const intro = $('#intro'), game = $('#game'), board = $('#board'), center = $('#center'), stage = $('#stage');
+  const wordBox = $('#wordBox'), wordBtn = $('#wordBtn');
+  let sayEl = $('#say');
+  let S = { done: true };
+
+  /* ---------- Roboter-Bild ---------- */
+  const IMG_KEY = 'nomen-fabrik-roboter-bild';
+  const detSvg = vb => `
+    <svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Roboter Sorti">
+      <line x1="100" y1="34" x2="100" y2="54" stroke="#4c5779" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="100" cy="26" r="10" fill="#ff5a6b" stroke="#4c5779" stroke-width="4"/>
+      <circle cx="96" cy="22" r="3" fill="#fff" opacity=".85"/>
+      <rect x="30" y="86" width="18" height="40" rx="7" fill="#7b86a6" stroke="#4c5779" stroke-width="4"/>
+      <rect x="152" y="86" width="18" height="40" rx="7" fill="#7b86a6" stroke="#4c5779" stroke-width="4"/>
+      <rect x="88" y="146" width="24" height="14" fill="#7b86a6" stroke="#4c5779" stroke-width="3"/>
+      <rect x="52" y="156" width="96" height="76" rx="20" fill="#ffd84d" stroke="#4c5779" stroke-width="5"/>
+      <rect x="72" y="174" width="56" height="34" rx="10" fill="#14213d"/>
+      <circle cx="87" cy="191" r="6" fill="#ff5a6b"/><circle cx="103" cy="191" r="6" fill="#3ddc84"/>
+      <rect x="113" y="186" width="10" height="10" rx="3" fill="#ffd84d"/>
+      <rect x="20" y="164" width="26" height="58" rx="13" fill="#a9c8ff" stroke="#4c5779" stroke-width="4"/>
+      <rect x="154" y="164" width="26" height="58" rx="13" fill="#a9c8ff" stroke="#4c5779" stroke-width="4"/>
+      <rect x="44" y="52" width="112" height="94" rx="26" fill="#a9c8ff" stroke="#4c5779" stroke-width="5"/>
+      <rect x="58" y="68" width="84" height="60" rx="18" fill="#14213d"/>
+      <circle cx="80" cy="92" r="11" fill="#7fffd4"/><circle cx="120" cy="92" r="11" fill="#7fffd4"/>
+      <circle cx="84" cy="88" r="4" fill="#fff"/><circle cx="124" cy="88" r="4" fill="#fff"/>
+      <path d="M82 110q18 15 36 0" stroke="#7fffd4" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </svg>`;
+
+  function renderDet(src){
+    document.querySelectorAll('.det').forEach(el => {
+      el.innerHTML = '';
+      if (src){
+        const im = new Image(); im.src = src; im.alt = 'Roboter Sorti'; el.appendChild(im);
+      } else {
+        el.innerHTML = detSvg(el.classList.contains('small') ? '26 8 148 148' : '0 0 200 240');
+      }
+    });
+  }
+  let savedImg = null;
+  try { savedImg = localStorage.getItem(IMG_KEY); } catch (e) {}
+  renderDet(savedImg);
+
+  $('#pickImg').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const fr = new FileReader();
+    fr.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, 640 / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        const url = c.toDataURL(f.type === 'image/png' ? 'image/png' : 'image/jpeg', .88);
+        renderDet(url);
+        try { localStorage.setItem(IMG_KEY, url); } catch (err) {}
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(f);
+    e.target.value = '';
+  });
+  $('#resetImg').addEventListener('click', () => {
+    renderDet(null);
+    try { localStorage.removeItem(IMG_KEY); } catch (e) {}
+  });
+
+  /* ---------- Töne ---------- */
+  let audioCtx = null, soundOn = true;
+  function tone(freq, start, dur, type = 'sine', vol = .15){
+    if (!soundOn) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      const t = audioCtx.currentTime + start;
+      o.type = type; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t + .02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + dur + .05);
+    } catch (e) {}
+  }
+  const sfx = {
+    pick: () => tone(520, 0, .1, 'triangle'),
+    ok:   () => { tone(660, 0, .12, 'triangle'); tone(880, .1, .22, 'triangle'); },
+    no:   () => { tone(220, 0, .18, 'sawtooth', .07); tone(180, .15, .24, 'sawtooth', .07); },
+    win:  () => [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .13, .32, 'triangle')),
+    clank:() => { tone(190, 0, .09, 'square', .05); tone(330, .05, .07, 'square', .04); },
+    thud: () => tone(105, 0, .2, 'sine', .25),
+    tick: () => tone(700, 0, .06, 'square', .05),
+    ding: () => { tone(880, 0, .16, 'triangle'); tone(1320, .08, .26, 'triangle'); }
+  };
+  document.querySelectorAll('.sound-btn').forEach(btn => btn.addEventListener('click', () => {
+    soundOn = !soundOn;
+    document.querySelectorAll('.sound-btn').forEach(b => {
+      b.textContent = soundOn ? '🎵' : '🔇';
+      b.setAttribute('aria-pressed', String(soundOn));
+    });
+    if (soundOn) sfx.pick();
+  }));
+
+  /* ---------- Vorlesen ---------- */
+  const canSpeak = 'speechSynthesis' in window;
+  function cancelSpeech(){ try { if (canSpeak) speechSynthesis.cancel(); } catch (e) {} }
+  function speak(text){
+    if (!canSpeak) return;
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'de-DE'; u.rate = .85;
+      const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith('de'));
+      if (v) u.voice = v;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  if (!canSpeak){ $('#readBtn').hidden = true; $('#wordSpeak').hidden = true; $('#fSpeak').hidden = true; }
+  $('#readBtn').addEventListener('click', () => {
+    try { if (speechSynthesis.speaking){ speechSynthesis.cancel(); return; } } catch (e) {}
+    const txt = $('#story').innerText.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '');
+    speak(txt);
+  });
+  $('#wordSpeak').addEventListener('click', () => { if (S.cur && !S.done) speak(S.cur.w); });
+
+  /* ---------- Anzeige-Helfer ---------- */
+  function say(text, mood){
+    sayEl.textContent = text;
+    sayEl.classList.remove('good', 'bad');
+    if (mood) sayEl.classList.add(mood);
+  }
+  function setWord(el, w){
+    el.textContent = '';
+    const s = document.createElement('span'); s.className = 'cap'; s.textContent = w[0];
+    el.append(s, w.slice(1));
+  }
+  function makeChip(word, cat){
+    const chip = document.createElement('span');
+    chip.className = 'chip'; chip.dataset.cat = cat;
+    const w = document.createElement('span'); w.className = 'w'; setWord(w, word);
+    chip.appendChild(w);
+    return chip;
+  }
+  function bump(el, cls){
+    el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls);
+    el.addEventListener('animationend', e => { if (e.target === el) el.classList.remove(cls); }, { once: true });
+  }
+  const isCross = () => cfg.layout === 'cross';
+  const T = () => isCross()
+    ? { go: 'Tippe jetzt auf die richtige Ecke.', ask: 'Wohin gehört das Wort? Tippe auf die richtige Ecke.', tip: 'Tipp: Schau in die leuchtende Ecke!' }
+    : { go: 'Tippe jetzt auf die richtige Kiste.', ask: 'Wohin gehört das Wort? Tippe auf die richtige Kiste.', tip: 'Tipp: Schau in die leuchtende Kiste!' };
+
+  function buildBoard(){
+    board.className = isCross() ? 'cross' : 'cols';
+    board.dataset.per = cfg.per;
+    board.innerHTML = '';
+    const list = isCross()
+      ? CROSS.map(o => Object.assign({}, catOf(o.key), { pos: o.pos }))
+      : CATS;
+    list.forEach(c => {
+      const d = document.createElement('div');
+      d.className = 'col'; d.dataset.cat = c.key; d.dataset.pos = c.pos || '';
+      d.setAttribute('role', 'button'); d.tabIndex = 0;
+      d.setAttribute('aria-label', (isCross() ? 'Ecke ' : 'Kiste ') + c.label);
+      d.innerHTML = `<div class="col-head"><span aria-hidden="true">${c.icon}</span><span>${c.label}</span></div>`
+                  + `<div class="col-body">${cfg.reveal === 'end' ? '<span class="stash"><span class="n">0</span><span class="t">Wörter</span></span>' : ''}</div>`;
+      d.addEventListener('click', () => onCol(d));
+      d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); onCol(d); } });
+      board.appendChild(d);
+    });
+  }
+
+  /* ---------- Spielablauf ---------- */
+  function makeQueue(per){
+    const q = [];
+    CATS.forEach(c => q.push(...shuffle(WORDS[c.key]).slice(0, per).map(w => ({ w, cat: c.key }))));
+    return shuffle(q);
+  }
+
+  function startGame(){ if (cfg.mode === 'belt' || cfg.mode === 'duel') startFactory(); else startSort(); }
+
+  function startSort(){
+    cancelSpeech();
+    F.token++; F.running = false;
+    factory.hidden = true; sayEl = $('#say');
+    S = { n: cfg.per * 4, queue: makeQueue(cfg.per), idx: 0, selected: false, locked: false,
+          firstTry: 0, wordMistakes: 0, done: false, cur: null, placed: [], right: 0, phase: 'play' };
+    game.dataset.layout = cfg.layout;
+    game.classList.remove('finished');
+    buildBoard();
+    center.hidden = !isCross();
+    (isCross() ? center : stage).prepend(wordBox);
+    wordBox.hidden = false; $('#wordRow').hidden = false; $('#stageHint').hidden = false; $('#nextRow').hidden = true;
+    $('#endBar').hidden = true; $('#overlay').hidden = true;
+    intro.hidden = true; game.hidden = false;
+    window.scrollTo(0, 0);
+    showWord();
+    say('Hilf mir, die Nomen zu ordnen! Tippe auf das Wort.');
+  }
+
+  function toIntro(){
+    cancelSpeech();
+    S = { done: true };
+    F.token++; F.running = false;
+    $('#overlay').hidden = true; $('#cratePanel').hidden = true; $('#duelPanel').hidden = true;
+    game.hidden = true; factory.hidden = true; intro.hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  function showWord(){
+    S.cur = S.queue[S.idx]; S.selected = false; S.wordMistakes = 0;
+    const t = $('#wordText'); t.textContent = S.cur.w; t.style.visibility = '';
+    wordBtn.classList.remove('selected');
+    board.classList.remove('ready');
+    board.querySelectorAll('.hint').forEach(x => x.classList.remove('hint'));
+    $('#stageHint').textContent = 'Tippe auf das Wort.';
+    $('#count').textContent = `Wort ${S.idx + 1} von ${S.n}`;
+    $('#fill').style.width = (S.idx / S.n * 100) + '%';
+  }
+
+  wordBtn.addEventListener('click', () => {
+    if (S.done || S.locked || !S.cur) return;
+    S.selected = true;
+    wordBtn.classList.add('selected');
+    board.classList.add('ready');
+    $('#stageHint').textContent = T().go;
+    say(T().ask);
+    sfx.pick();
+  });
+
+  function onCol(colEl){
+    if (S.done || S.locked || !S.cur) return;
+    if (!S.selected){
+      bump(wordBtn, 'shake');
+      say('Tippe zuerst auf das Wort!');
+      return;
+    }
+    if (cfg.reveal === 'end') place(colEl);
+    else if (colEl.dataset.cat === S.cur.cat) correct(colEl);
+    else wrong(colEl);
+  }
+
+  /* --- Wort fliegt in die Ecke oder in die Kiste --- */
+  function fly(fromEl, toEl, text, cat, absorb){
+    if (reduceMotion) return Promise.resolve();
+    const a = fromEl.getBoundingClientRect(), b = toEl.getBoundingClientRect();
+    const c = makeChip(text, cat); c.classList.add('fly');
+    Object.assign(c.style, { position: 'fixed', left: b.left + 'px', top: b.top + 'px', width: b.width + 'px',
+      height: b.height + 'px', zIndex: 60, transformOrigin: '50% 50%', pointerEvents: 'none' });
+    document.body.appendChild(c);
+    const dx = (a.left + a.width / 2) - (b.left + b.width / 2);
+    const dy = (a.top + a.height / 2) - (b.top + b.height / 2);
+    const s = Math.max(1, a.width / b.width);
+    const end = absorb ? { transform: 'scale(.3)', opacity: 0 } : { transform: 'none', opacity: 1 };
+    const anim = c.animate([{ transform: `translate(${dx}px,${dy}px) scale(${s})`, opacity: 1 }, end],
+      { duration: 520, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    return anim.finished.then(() => c.remove(), () => c.remove());
+  }
+
+  /* --- Modus "Sofort sehen": mit Rückmeldung --- */
+  function wrong(colEl){
+    S.wordMistakes++;
+    sfx.no();
+    bump(colEl, 'shake'); bump(wordBtn, 'shake');
+    if (S.wordMistakes >= 2){
+      board.querySelector(`.col[data-cat="${S.cur.cat}"]`).classList.add('hint');
+      say(T().tip, 'bad');
+    } else {
+      say(pick(WRONG), 'bad');
+    }
+  }
+
+  async function correct(colEl){
+    S.locked = true;
+    if (S.wordMistakes === 0) S.firstTry++;
+    sfx.ok();
+    const cur = S.cur, cat = catOf(cur.cat);
+    const chip = makeChip(cur.w, cur.cat);
+    chip.style.visibility = 'hidden';
+    colEl.querySelector('.col-body').appendChild(chip);
+    board.querySelectorAll('.hint').forEach(x => x.classList.remove('hint'));
+    board.classList.remove('ready');
+    say(`${pick(PRAISE)} ${cur.w} gehört zu den ${cat.dat}.`, 'good');
+    const t = $('#wordText'); t.style.visibility = 'hidden';
+    await fly(t, chip, cur.w, cur.cat, false);
+    chip.style.visibility = '';
+    bump(chip, 'pop');
+    S.idx++;
+    if (S.idx >= S.queue.length) finishNow(); else showWord();
+    S.locked = false;
+  }
+
+  /* --- Modus "Erst am Ende sehen": ohne Rückmeldung --- */
+  async function place(colEl){
+    S.locked = true;
+    const cur = S.cur, chosen = colEl.dataset.cat;
+    S.placed.push({ w: cur.w, real: cur.cat, chosen, chip: null });
+    if (chosen === cur.cat) S.right++;
+    sfx.pick();
+    board.classList.remove('ready');
+    say(pick(NOTED));
+    const stash = colEl.querySelector('.stash');
+    const t = $('#wordText'); t.style.visibility = 'hidden';
+    await fly(t, stash, cur.w, chosen, true);
+    const n = S.placed.filter(p => p.chosen === chosen).length;
+    stash.querySelector('.n').textContent = n;
+    stash.querySelector('.t').textContent = n === 1 ? 'Wort' : 'Wörter';
+    bump(stash, 'pop');
+    S.idx++;
+    if (S.idx >= S.queue.length) allSorted(); else showWord();
+    S.locked = false;
+  }
+
+  function allSorted(){
+    S.done = true; S.phase = 'sorted';
+    $('#wordRow').hidden = true; $('#stageHint').hidden = true; $('#nextRow').hidden = false;
+    board.classList.remove('ready');
+    $('#fill').style.width = '100%';
+    $('#count').textContent = `${S.n} von ${S.n}`;
+    say('Alle Wörter sind sortiert! Drücke auf „Weiter“.', 'good');
+    sfx.win();
+  }
+
+  function reveal(){
+    S.phase = 'review';
+    wordBox.hidden = true; center.hidden = true;
+    board.classList.add('showcaps');
+    board.querySelectorAll('.stash').forEach(x => x.hidden = true);
+    S.placed.forEach((p, i) => {
+      const chip = makeChip(p.w, p.chosen);
+      if (!reduceMotion) chip.style.animation = `pop .4s ${Math.min(i * 60, 2400)}ms both`;
+      board.querySelector(`.col[data-cat="${p.chosen}"] .col-body`).appendChild(chip);
+      p.chip = chip;
+    });
+    say('Schaut euch alles genau an. Stimmt alles?');
+    setEndBar('review');
+    sfx.ok();
+  }
+
+  function check(){
+    S.phase = 'checked';
+    let wrongCount = 0;
+    S.placed.forEach(p => {
+      if (p.chosen !== p.real){
+        wrongCount++;
+        p.chip.style.animation = '';
+        p.chip.classList.add('wrong');
+        const s = document.createElement('small'); s.textContent = 'richtig: ' + catOf(p.real).label;
+        p.chip.appendChild(s);
+      }
+    });
+    S.wrongCount = wrongCount;
+    setEndBar('checked');
+    say(wrongCount ? `${S.right} von ${S.n} sind richtig. Die Wörter mit rotem Rand lagen falsch.` : 'Alles richtig sortiert! Super gemacht!', wrongCount ? 'bad' : 'good');
+    fillResult();
+    if (!wrongCount){ sfx.win(); confetti(); } else sfx.no();
+    setTimeout(() => { $('#overlay').hidden = false; $('#ovLook').focus(); }, wrongCount ? 900 : 700);
+  }
+
+  /* --- Ende im Modus "Sofort sehen" --- */
+  function finishNow(){
+    S.done = true; S.phase = 'done';
+    wordBox.hidden = true;
+    board.classList.remove('ready'); board.classList.add('showcaps');
+    $('#fill').style.width = '100%';
+    $('#count').textContent = `${S.n} von ${S.n}`;
+    say('Danke! Alle Nomen sind sortiert!', 'good');
+    setEndBar('done');
+    fillResult();
+    sfx.win(); confetti();
+    setTimeout(() => { $('#overlay').hidden = false; $('#ovLook').focus(); }, 700);
+  }
+
+  function setEndBar(kind){
+    game.classList.add('finished');
+    $('#endBar').hidden = false;
+    const t = $('#endText');
+    $('#barReveal').hidden = kind !== 'review';
+    $('#barResult').hidden = kind === 'review';
+    if (kind === 'done') t.textContent = '🎉 Geschafft! Was fällt dir an den roten Anfangsbuchstaben auf?';
+    if (kind === 'review') t.textContent = 'Stimmt alles? Ihr könnt jetzt zusammen prüfen.';
+    if (kind === 'checked') t.textContent = S.wrongCount ? 'Wörter mit rotem Rand lagen im falschen Bereich.' : '🎉 Alles richtig sortiert!';
+  }
+
+  function fillResult(){
+    const good = cfg.reveal === 'end' ? S.right : S.firstTry;
+    const rate = good / S.n, stars = rate >= .85 ? 3 : rate >= .6 ? 2 : 1;
+    $('#stars').innerHTML = [1, 2, 3].map(i => `<span class="star${i <= stars ? ' on' : ''}">★</span>`).join('');
+    $('#ovScore').textContent = cfg.reveal === 'end'
+      ? `Richtig sortiert: ${good} von ${S.n}`
+      : `Beim ersten Versuch richtig: ${good} von ${S.n}`;
+    $('#ovTitle').textContent = (cfg.reveal === 'end' && good < S.n) ? 'Auflösung 🔎' : 'Geschafft! 🎉';
+    $('#ovCrates').hidden = true;
+  }
+
+  function confetti(){
+    if (reduceMotion) return;
+    const icons = ['⭐', '🎉', '📦', '✨', '⚙️'];
+    for (let i = 0; i < 36; i++){
+      const s = document.createElement('span');
+      s.className = 'confetti'; s.textContent = icons[i % icons.length];
+      s.style.left = Math.random() * 96 + 'vw';
+      document.body.appendChild(s);
+      const a = s.animate(
+        [{ transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+         { transform: `translateY(${innerHeight + 80}px) rotate(${Math.round(Math.random() * 720 - 360)}deg)`, opacity: .9 }],
+        { duration: 1600 + Math.random() * 1600, delay: Math.random() * 500, easing: 'ease-in', fill: 'both' });
+      a.onfinish = () => s.remove();
+    }
+  }
+
+  /* =====================================================
+     FÖRDERBAND-FABRIK
+     Wörter fahren als Pakete auf dem Band. Wer die richtige Kiste antippt,
+     lässt den Roboterarm das vorderste Paket dort hineinwerfen.
+     ===================================================== */
+  const factory = $('#factory'), scene = $('#scene'), pkgLayer = $('#pkgs'), armEl = $('#arm'),
+        cableEl = $('#cable'), clawEl = $('#claw'), beltEl = $('#belt'), cratesEl = $('#crates');
+  const RAIL_Y = 44;                       // muss zu --rail-y im CSS passen
+  const TEMPO = {
+    calm: { base: 70,  ramp: .25, wait: true,  arm: 1 },     // gemütlich: Band wartet am Ende
+    mid:  { base: 85,  ramp: .6,  wait: false, arm: .85 },   // mittel
+    fast: { base: 125, ramp: .6,  wait: false, arm: .7 }     // schnell
+  };
+  const easeIO  = p => p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+  const easeIn  = p => p * p;
+  const easeOut = p => 1 - Math.pow(1 - p, 3);
+  let F = { token: 0, running: false, belt: [] };
+  const A = { x: 0, len: 14, open: 0, held: null };   // Zustand des Roboterarms
+
+  /* Zahnräder als Wanddeko */
+  function cogSvg(size, teeth, cls){
+    let d = ''; const n = teeth * 4;
+    for (let i = 0; i < n; i++){
+      const a = i / n * Math.PI * 2, r = (i % 4 === 1 || i % 4 === 2) ? 48 : 40;
+      d += (i ? 'L' : 'M') + (50 + r * Math.cos(a)).toFixed(1) + ' ' + (50 + r * Math.sin(a)).toFixed(1);
+    }
+    d += 'ZM64 50A14 14 0 1 0 36 50A14 14 0 1 0 64 50Z';
+    return `<svg class="cog ${cls}" viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true"><path d="${d}" fill-rule="evenodd"/></svg>`;
+  }
+  $('#cogs').innerHTML = cogSvg(240, 14, 'c1') + cogSvg(150, 10, 'c2') + cogSvg(110, 9, 'c3');
+
+  /* ---------- Maße ---------- */
+  function measure(){
+    if (factory.hidden) return;
+    F.W = scene.clientWidth; F.H = scene.clientHeight;
+    F.pw = $('#pwProbe').offsetWidth || 160;
+    F.ph = Math.round(F.pw * .42);
+    F.beltTop = Math.round(Math.max(F.H * .36, RAIL_Y + 43 + 2 * F.ph + 12));
+    scene.style.setProperty('--belt-y', F.beltTop + 'px');
+    F.k = Math.max(.6, Math.min(1.5, F.W / 1300));
+    F.gap = Math.round(F.pw * 1.32);
+    F.stopX = F.W - F.pw - Math.round(F.pw * .15);
+    F.tipX = F.W - F.pw * .5;
+  }
+  if (window.ResizeObserver) new ResizeObserver(() => measure()).observe(scene);
+
+  /* ---------- kleine Helfer ---------- */
+  function tween(ms, fn, ease = easeIO){
+    const tok = F.token;
+    return new Promise(res => {
+      if (ms <= 0){ fn(1); res(); return; }
+      const t0 = performance.now();
+      const step = now => {
+        if (F.token !== tok){ res(); return; }
+        const p = Math.min(1, (now - t0) / ms);
+        fn(ease(p));
+        if (p < 1) requestAnimationFrame(step); else res();
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  function pulse(el, cls, ms){
+    el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls);
+    clearTimeout(el._pt); el._pt = setTimeout(() => el.classList.remove(cls), ms);
+  }
+  function flash(kind){
+    const l = $(`.lamp .l.${kind}`); if (!l) return;
+    l.classList.add('on'); clearTimeout(l._t);
+    l._t = setTimeout(() => { if (!l.classList.contains('stay')) l.classList.remove('on'); }, 700);
+  }
+  function sparks(x, y, color){
+    if (reduceMotion) return;
+    for (let i = 0; i < 12; i++){
+      const s = document.createElement('i');
+      s.className = 'spark'; s.style.left = x + 'px'; s.style.top = y + 'px'; s.style.background = color;
+      scene.appendChild(s);
+      const a = Math.random() * Math.PI * 2, d = 45 + Math.random() * 70;
+      s.animate([{ transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+                 { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d - 40}px)) scale(.2)`, opacity: 0 }],
+                { duration: 550 + Math.random() * 350, easing: 'ease-out' }).onfinish = () => s.remove();
+    }
+  }
+  function floatText(txt, x, y){
+    const s = document.createElement('span');
+    s.className = 'float'; s.textContent = txt; s.style.left = x + 'px'; s.style.top = y + 'px';
+    scene.appendChild(s);
+    if (reduceMotion){ setTimeout(() => s.remove(), 900); return; }
+    s.animate([{ transform: 'translate(-50%,-50%)', opacity: 1 }, { transform: 'translate(-50%,-120px)', opacity: 0 }],
+              { duration: 900, easing: 'ease-out' }).onfinish = () => s.remove();
+  }
+  function updateHud(){
+    const a = $('#fScore'), b = $('#fScoreB'), st = $('#fStreak');
+    if (F.duel){
+      a.classList.add('ta'); b.hidden = false; st.hidden = true;
+      a.textContent = `${F.teams.a.name}: ${F.teams.a.score}`;
+      b.textContent = `${F.teams.b.name}: ${F.teams.b.score}`;
+      cratesEl.querySelectorAll('.team').forEach(t => { t.querySelector('.team-score').textContent = F.teams[t.dataset.team].score; });
+    } else {
+      a.classList.remove('ta'); b.hidden = true;
+      a.textContent = '⭐ ' + F.score;
+      st.hidden = F.streak < 2; st.textContent = '🔥 ' + F.streak;
+    }
+    $('#fCount').textContent = F.timed ? `${F.log.length} Wörter` : `${F.sorted} von ${F.n}`;
+    if (!F.timed) $('#fFill').style.width = (F.sorted / F.n * 100) + '%';
+  }
+  const fmtTime = sec => { const t = Math.ceil(sec); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  function updateTimer(left){
+    const el = $('#fTimer');
+    el.hidden = !F.timed;
+    if (!F.timed) return;
+    el.textContent = '⏱ ' + fmtTime(left);
+    el.classList.toggle('idle', !F.clockOn);
+    el.classList.toggle('urgent', F.clockOn && left <= 10 && left > 0);
+    $('#fFill').style.width = ((F.total - left) / F.total * 100).toFixed(1) + '%';
+  }
+  function clearHints(){ cratesEl.querySelectorAll('.hint').forEach(c => c.classList.remove('hint')); }
+
+  /* ---------- Kisten ---------- */
+  function makeTeam(k){
+    const t = F.teams[k];
+    const d = document.createElement('div');
+    d.className = 'team'; d.dataset.team = k;
+    const head = document.createElement('div'); head.className = 'team-head';
+    const nm = document.createElement('span'); nm.className = 'team-name'; nm.textContent = t.name;
+    const sc = document.createElement('span'); sc.className = 'team-score'; sc.textContent = '0';
+    head.append(nm, sc);
+    const btns = document.createElement('div'); btns.className = 'team-btns';
+    CATS.forEach(c => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'tbtn'; b.dataset.cat = c.key;
+      b.setAttribute('aria-label', `${t.name}: ${c.label}`);
+      b.innerHTML = `<span class="ti" aria-hidden="true">${c.icon}</span><span class="tn">${c.label}</span>`;
+      b.addEventListener('click', () => onTeam(k, c.key));
+      btns.appendChild(b);
+    });
+    const lock = document.createElement('div'); lock.className = 'team-lock'; lock.setAttribute('aria-hidden', 'true');
+    lock.innerHTML = '<span>🔒 Antwort abgegeben</span>';
+    btns.appendChild(lock);
+    d.append(head, btns);
+    return d;
+  }
+  function makeHatch(){
+    const d = document.createElement('div');
+    d.className = 'crate hatch'; d.dataset.cat = 'fertig'; d.setAttribute('aria-label', 'Fertig-Kiste');
+    d.innerHTML = '<div class="crate-back"></div>'
+      + '<div class="crate-front"><div class="plate"><span class="ico" aria-hidden="true">📦</span><span>Fertig</span></div></div>'
+      + '<div class="crate-count" aria-hidden="true">0</div>';
+    return d;
+  }
+  function buildCrates(){
+    cratesEl.innerHTML = '';
+    cratesEl.classList.toggle('duel', !!F.duel);
+    if (F.duel){
+      cratesEl.appendChild(makeTeam('a'));
+      cratesEl.appendChild(makeHatch());
+      cratesEl.appendChild(makeTeam('b'));
+      return;
+    }
+    CATS.forEach(c => {
+      const d = document.createElement('div');
+      d.className = 'crate'; d.dataset.cat = c.key; d.tabIndex = 0; d.setAttribute('role', 'button');
+      d.setAttribute('aria-label', 'Kiste ' + c.label);
+      d.innerHTML = '<div class="crate-back"></div>'
+        + `<div class="crate-front"><div class="plate"><span class="ico" aria-hidden="true">${c.icon}</span><span>${c.label}</span></div></div>`
+        + '<div class="crate-count" aria-hidden="true">0</div>';
+      d.addEventListener('click', () => onCrate(c.key));
+      d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); onCrate(c.key); } });
+      cratesEl.appendChild(d);
+    });
+  }
+
+  /* ---------- Pakete ---------- */
+  function makePkg(wd, x){
+    const el = document.createElement('div');
+    el.className = 'pkg';
+    el.innerHTML = '<div class="box"><span class="lab"></span></div>';
+    const lab = el.querySelector('.lab');
+    lab.textContent = wd.w;
+    el.style.setProperty('--card', pick(['#c99a5b', '#d4a76a', '#bb8a4d']));
+    pkgLayer.appendChild(el);
+    let fs = F.pw * .17;
+    lab.style.fontSize = fs.toFixed(1) + 'px';
+    for (let i = 0; i < 16 && lab.offsetWidth > F.pw * .9; i++){ fs *= .93; lab.style.fontSize = fs.toFixed(1) + 'px'; }
+    const p = { wd, el, x, y: F.beltTop - F.ph + 8, rot: 0, picked: false, fall: false, tries: 0 };
+    renderPkg(p);
+    return p;
+  }
+  function renderPkg(p){ p.el.style.transform = `translate3d(${p.x}px,${p.y}px,0) rotate(${p.rot}deg)`; }
+  const frontPkg = () => F.belt.find(p => !p.picked && !p.fall);
+
+  function spawnMaybe(){
+    if (!F.queue.length || F.belt.length >= (F.T.wait ? 4 : 9)) return;
+    const ref = [...F.belt].reverse().find(p => !p.picked && !p.fall);
+    if (!ref){ F.belt.push(makePkg(F.queue.shift(), -F.pw - 4)); return; }
+    if (ref.x >= F.gap - F.pw) F.belt.push(makePkg(F.queue.shift(), ref.x - F.gap));
+  }
+
+  /* ---------- Roboterarm ---------- */
+  function renderArm(){
+    armEl.style.transform = `translate3d(${A.x}px,0,0)`;
+    cableEl.style.height = A.len + 'px';
+    clawEl.style.transform = `translateY(${A.len}px)`;
+    clawEl.style.setProperty('--open', A.open.toFixed(3));
+    if (A.held){ A.held.x = A.x - F.pw / 2; A.held.y = RAIL_Y + 43 + A.len; renderPkg(A.held); }
+  }
+  function moveTo(x, len, ms, ease){
+    const x0 = A.x, l0 = A.len;
+    return tween(ms, e => { A.x = x0 + (x - x0) * e; A.len = l0 + (len - l0) * e; renderArm(); }, ease);
+  }
+  function openTo(v, ms){
+    const o0 = A.open;
+    return tween(ms, e => { A.open = o0 + (v - o0) * e; renderArm(); }, easeOut);
+  }
+
+  /* ---------- Spielstart ---------- */
+  function startFactory(){
+    cancelSpeech();
+    const duel = cfg.mode === 'duel';
+    const T_ = duel ? TEMPO.calm : (TEMPO[cfg.tempo] || TEMPO.calm), tok = F.token + 1;
+    F = { token: tok, running: true, ended: false, busy: false, T: T_, m: T_.arm * (reduceMotion ? .4 : 1),
+          duel, timed: duel && cfg.time > 0, total: cfg.time, clockOn: false, timeUp: false, endAt: 0, lastSec: null,
+          gateOpen: false, log: [], dpView: 'sol',
+          teams: duel ? { a: { name: $('#nameA').value.trim() || 'Team Sonne', score: 0, choice: null },
+                          b: { name: $('#nameB').value.trim() || 'Team Mond', score: 0, choice: null } } : null,
+          n: (duel && cfg.time > 0) ? 80 : cfg.per * 4,
+          queue: makeQueue((duel && cfg.time > 0) ? 20 : cfg.per).map(q => ({ w: q.w, cat: q.cat, bad: false })),
+          belt: [], crates: { menschen: [], tiere: [], pflanzen: [], dinge: [] },
+          sorted: 0, firstTry: 0, score: 0, streak: 0, sf: 1, offset: 0, missed: 0 };
+    intro.hidden = true; game.hidden = true; factory.hidden = false;
+    $('#overlay').hidden = true; $('#cratePanel').hidden = true; $('#duelPanel').hidden = true; $('#fEnd').hidden = true;
+    $('#fResult').hidden = false; $('#fCrates').textContent = 'Kisten ansehen';
+    sayEl = $('#fSay');
+    pkgLayer.innerHTML = '';
+    scene.querySelectorAll('.spark,.float').forEach(x => x.remove());
+    document.querySelectorAll('.lamp .l').forEach(l => l.classList.remove('on', 'stay'));
+    buildCrates();
+    window.scrollTo(0, 0);
+    measure();
+
+    A.x = F.W / 2; A.len = 14; A.open = 0; A.held = null; renderArm();
+    const frontX = T_.wait ? F.stopX - Math.round(F.gap * .6) : Math.round(F.W * .3);
+    for (let i = 0; i < (T_.wait ? 4 : 12) && F.queue.length; i++){
+      const x = frontX - i * F.gap;
+      if (x < -F.pw * .6) break;
+      F.belt.push(makePkg(F.queue.shift(), x));
+    }
+    updateHud();
+    updateTimer(F.total);
+    say(duel ? (F.timed ? 'Zwei Teams, ein Wort! Die Uhr startet beim ersten Wort.' : 'Zwei Teams, ein Wort! Gleich dürft ihr wählen.')
+             : T_.wait ? 'Hier kommen die Nomen! Tippe die richtige Kiste an.'
+                       : 'Achtung, das Band läuft! Tippe schnell die richtige Kiste an.');
+    runLoop(tok);
+  }
+
+  function runLoop(tok){
+    let last = performance.now();
+    const frame = now => {
+      if (F.token !== tok || !F.running) return;
+      const dt = Math.min(.05, Math.max(0, (now - last) / 1000)); last = now;
+      step(dt);
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }
+
+  function step(dt){
+    const T_ = F.T;
+    if (F.timed && F.clockOn && !F.timeUp){
+      const left = Math.max(0, (F.endAt - performance.now()) / 1000), sec = Math.ceil(left);
+      if (sec !== F.lastSec){
+        F.lastSec = sec; updateTimer(left);
+        if (sec > 0 && sec <= 5) sfx.tick();
+      }
+      if (left <= 0) onTimeUp();
+    }
+    const front = frontPkg();
+    F.sf += ((F.busy ? 0 : 1) - F.sf) * Math.min(1, dt * (F.busy ? 12 : 5));
+    let v = 0, cap = Infinity;
+    if (T_.wait){
+      if (front){
+        const dist = F.stopX - front.x;
+        if (dist > .5){ v = Math.min(420 * F.k, Math.max(55 * F.k, dist * 3)); cap = dist; }
+      } else v = T_.base * F.k;
+    } else {
+      v = T_.base * F.k * (1 + T_.ramp * (F.sorted / F.n));
+    }
+    const move = Math.min(v * F.sf * dt, cap);
+    if (move > 0){
+      for (const p of F.belt) if (!p.picked && !p.fall) p.x += move;
+      F.offset += move;
+    }
+    spawnMaybe();
+    if (F.duel && front && !F.busy && !F.gateOpen && front.x >= F.stopX - 1){ F.gateOpen = true; openGate(); }
+    if (!T_.wait && front && front.x > F.tipX && !F.busy) tip(front);
+    for (const p of F.belt){
+      if (!p.picked && !p.fall){ p.y = F.beltTop - F.ph + 8; renderPkg(p); }
+      p.el.classList.toggle('active', p === front && !F.busy && !F.ended && p.x >= -F.pw * .15);
+    }
+    beltEl.style.setProperty('--bx', (F.offset % 56).toFixed(1) + 'px');
+    beltEl.style.setProperty('--rot', (F.offset * 1.8).toFixed(1));
+  }
+
+  /* ---------- Antippen ---------- */
+  function onCrate(cat){
+    if (!F.running || F.busy || F.ended || F.duel) return;
+    const p = frontPkg();
+    if (!p) return;
+    if (p.x < -F.pw * .15){ say('Warte kurz, das Paket kommt gleich!'); return; }
+    if (p.wd.cat === cat) success(p, cat); else fail(p, cat);
+  }
+
+  function fail(p, cat){
+    const crateEl = cratesEl.querySelector(`.crate[data-cat="${cat}"]`);
+    p.tries++; p.wd.bad = true; F.streak = 0;
+    sfx.no(); flash('r');
+    pulse(crateEl, 'wobble', 480); pulse(p.el.firstElementChild, 'shake', 480);
+    if (p.tries >= 2){
+      cratesEl.querySelector(`.crate[data-cat="${p.wd.cat}"]`).classList.add('hint');
+      say('Tipp: Schau in die leuchtende Kiste!', 'bad');
+    } else say(pick(WRONG), 'bad');
+    updateHud();
+  }
+
+  /* Der Roboterarm holt das Paket vom Band und wirft es in die Zielkiste */
+  async function armDeliver(p, crateEl, onLanded){
+    const tok = F.token, m = F.m, ok = () => F.token === tok;
+    p.picked = true; p.el.classList.remove('active');
+    const sr = scene.getBoundingClientRect(), cr = crateEl.getBoundingClientRect();
+    const crateCx = cr.left - sr.left + cr.width / 2, crateTop = cr.top - sr.top;
+    const base = RAIL_Y + 43, pickX = p.x + F.pw / 2, pickLen = p.y - base;
+    const carryLen = Math.max(0, pickLen - F.ph - 12);
+    const hoverLen = Math.max(carryLen, crateTop - F.ph - 10 - base);
+    const dur = dx => (160 + Math.abs(dx) * .22) * m;
+
+    // 1) Arm fährt zum Paket und öffnet die Greifer
+    await Promise.all([moveTo(pickX, Math.min(A.len, 30), dur(pickX - A.x)), openTo(1, 200 * m)]);
+    if (!ok()) return false;
+    // 2) hinunter, 3) zupacken
+    await moveTo(pickX, pickLen, 230 * m, easeIn);
+    if (!ok()) return false;
+    await openTo(0, 130 * m);
+    if (!ok()) return false;
+    sfx.clank(); A.held = p;
+    // 4) hochheben, zur Kiste fahren, absenken
+    await moveTo(pickX, carryLen, 170 * m);
+    if (!ok()) return false;
+    await moveTo(crateCx, carryLen, dur(crateCx - pickX));
+    if (!ok()) return false;
+    await moveTo(crateCx, hoverLen, 170 * m);
+    if (!ok()) return false;
+    // 5) loslassen: Das Paket fällt in die Kiste
+    A.held = null;
+    const y0 = p.y, y1 = crateTop + 30;
+    await Promise.all([openTo(1, 90 * m), tween(240 * m, e => { p.y = y0 + (y1 - y0) * e; renderPkg(p); }, easeIn)]);
+    if (!ok()) return false;
+    p.el.remove();
+    F.belt = F.belt.filter(q => q !== p);
+    onLanded(crateCx, crateTop);
+    // 6) Arm fährt wieder nach oben
+    await Promise.all([moveTo(crateCx, 14, 200 * m), openTo(0, 200 * m)]);
+    return ok();
+  }
+
+  async function success(p, cat){
+    F.busy = true;
+    clearHints();
+    const crateEl = cratesEl.querySelector(`.crate[data-cat="${cat}"]`);
+    const done = await armDeliver(p, crateEl, (crateCx, crateTop) => {
+      let gain;
+      if (!p.wd.bad){ F.firstTry++; F.streak++; gain = 10 + Math.min(F.streak - 1, 5) * 2; }
+      else { F.streak = 0; gain = 5; }
+      F.score += gain; F.sorted++; F.crates[cat].push(p.wd.w);
+      crateEl.querySelector('.crate-count').textContent = F.crates[cat].length;
+      pulse(crateEl, 'bounce', 480);
+      sparks(crateCx, crateTop + 12, getComputedStyle(crateEl).getPropertyValue('--cat').trim() || '#ffc400');
+      floatText('+' + gain, crateCx, crateTop - 6);
+      sfx.thud(); setTimeout(() => sfx.ding(), 90); flash('g');
+      if ([3, 5, 8, 12, 16, 20].includes(F.streak)) say(`Super-Serie: ${F.streak} richtige in Folge!`, 'good');
+      else say(`${pick(PRAISE)} ${p.wd.w} gehört zu den ${catOf(cat).dat}.`, 'good');
+      updateHud();
+    });
+    if (!done) return;
+    F.busy = false;
+    if (F.sorted >= F.n) finishFactory();
+  }
+
+  /* ---------- Duell: zwei Teams ---------- */
+  function onTimeUp(){
+    F.timeUp = true;
+    updateTimer(0);
+    sfx.no();
+    if (F.busy){ say('Zeit ist um! Die letzte Runde wird noch gewertet.', 'bad'); return; }   // resolveDuel beendet danach
+    F.gateOpen = false;
+    finishFactory();
+  }
+  function openGate(){
+    if (F.timed && !F.clockOn){ F.clockOn = true; F.endAt = performance.now() + F.total * 1000; F.lastSec = null; }
+    F.teams.a.choice = null; F.teams.b.choice = null;
+    cratesEl.querySelectorAll('.team').forEach(t => { t.classList.remove('done'); t.classList.add('ready'); });
+    cratesEl.querySelectorAll('.tbtn').forEach(b => b.classList.remove('chosen', 'right', 'wrong', 'answer'));
+    say('Wohin gehört das Wort? Beide Teams tippen ihre Antwort!');
+    sfx.pick();
+  }
+  function onTeam(k, cat){
+    if (!F.running || !F.duel || F.busy || !F.gateOpen) return;
+    const t = F.teams[k], o = F.teams[k === 'a' ? 'b' : 'a'];
+    if (t.choice) return;
+    t.choice = cat; sfx.pick();
+    const panel = cratesEl.querySelector(`.team[data-team="${k}"]`);
+    panel.classList.remove('ready'); panel.classList.add('done');
+    if (o.choice) resolveDuel();
+    else say(`${t.name}: Antwort abgegeben. Jetzt ${o.name}!`);
+  }
+  async function resolveDuel(){
+    const tok = F.token, ok = () => F.token === tok;
+    F.busy = true; F.gateOpen = false;
+    const p = frontPkg(), right = p.wd.cat, T2 = F.teams, cat = catOf(right);
+    F.log.push({ w: p.wd.w, right, a: T2.a.choice, b: T2.b.choice });
+    const res = { a: T2.a.choice === right, b: T2.b.choice === right };
+    p.el.classList.remove('active');
+    cratesEl.querySelectorAll('.team').forEach(t => {
+      const k = t.dataset.team;
+      t.classList.remove('ready', 'done');
+      t.querySelectorAll('.tbtn').forEach(b => {
+        const mine = b.dataset.cat === T2[k].choice, isRight = b.dataset.cat === right;
+        b.classList.toggle('right', mine && isRight);
+        b.classList.toggle('wrong', mine && !isRight);
+        b.classList.toggle('answer', isRight && !mine);
+      });
+    });
+    if (res.a) T2.a.score++;
+    if (res.b) T2.b.score++;
+    updateHud();
+    const sr = scene.getBoundingClientRect();
+    ['a', 'b'].forEach(k => {
+      if (!res[k]) return;
+      const r = cratesEl.querySelector(`.team[data-team="${k}"]`).getBoundingClientRect();
+      floatText('+1', r.left - sr.left + r.width / 2, r.top - sr.top - 6);
+    });
+    const w = p.wd.w;
+    if (res.a && res.b){ say(`Beide Teams sind richtig! ${w} gehört zu den ${cat.dat}.`, 'good'); sfx.ok(); flash('g'); }
+    else if (res.a || res.b){ say(`Punkt für ${(res.a ? T2.a : T2.b).name}! ${w} gehört zu den ${cat.dat}.`, 'good'); sfx.ok(); flash('g'); flash('r'); }
+    else { say(`Leider beide falsch. ${w} gehört zu den ${cat.dat}.`, 'bad'); sfx.no(); flash('r'); }
+
+    await tween(1500, () => {}, easeOut);          // Zeit, die Lösung anzuschauen
+    if (!ok()) return;
+    if (F.timeUp){ F.busy = false; finishFactory(); return; }
+    const hatch = cratesEl.querySelector('.crate.hatch');
+    const done = await armDeliver(p, hatch, (cx, top) => {
+      F.sorted++; F.crates[right].push(w);
+      hatch.querySelector('.crate-count').textContent = F.sorted;
+      pulse(hatch, 'bounce', 480);
+      sparks(cx, top + 12, '#ffc400');
+      sfx.thud();
+      updateHud();
+    });
+    if (!done) return;
+    cratesEl.querySelectorAll('.tbtn').forEach(b => b.classList.remove('chosen', 'right', 'wrong', 'answer'));
+    F.busy = false;
+    if (F.sorted >= F.n || F.timeUp) finishFactory();
+  }
+
+  /* Paket verpasst (nur bei "Mittel" und "Schnell"): fällt vom Band und kommt später wieder */
+  async function tip(p){
+    const tok = F.token;
+    p.fall = true; p.el.classList.remove('active');
+    p.wd.bad = true; F.streak = 0; F.missed++;
+    sfx.no(); flash('r');
+    say('Verpasst! Das Wort kommt gleich noch einmal.', 'bad');
+    updateHud();
+    const x0 = p.x, y0 = p.y;
+    await tween(560 * F.m, e => { p.x = x0 + 50 * e; p.y = y0 + 190 * e; p.rot = 58 * e; p.el.style.opacity = String(1 - e); renderPkg(p); }, easeIn);
+    if (F.token !== tok) return;
+    p.el.remove();
+    F.belt = F.belt.filter(q => q !== p);
+    F.queue.push(p.wd);
+  }
+
+  /* ---------- Ende ---------- */
+  function fillResultF(){
+    if (F.duel){
+      const a = F.teams.a, b = F.teams.b;
+      const win = a.score === b.score ? null : (a.score > b.score ? a : b);
+      $('#stars').innerHTML = win ? '🏆' : '🤝';
+      $('#ovTitle').textContent = win ? `Gewinner: ${win.name} 🎉` : 'Unentschieden! 🎉';
+      $('#ovScore').textContent = `${a.name} ${a.score} : ${b.score} ${b.name} (bei ${F.log.length} Wörtern)`;
+      $('#ovCrates').hidden = false;
+      return;
+    }
+    const rate = F.firstTry / F.n, stars = rate >= .85 ? 3 : rate >= .6 ? 2 : 1;
+    $('#stars').innerHTML = [1, 2, 3].map(i => `<span class="star${i <= stars ? ' on' : ''}">★</span>`).join('');
+    $('#ovScore').textContent = `Beim ersten Versuch richtig: ${F.firstTry} von ${F.n}. Punkte: ${F.score}`;
+    $('#ovTitle').textContent = 'Feierabend! 🎉';
+    $('#ovCrates').hidden = false;
+  }
+  function finishFactory(){
+    const tok = F.token;
+    F.ended = true; F.running = false;
+    updateHud();
+    document.querySelectorAll('.lamp .l.g').forEach(l => l.classList.add('on', 'stay'));
+    if (F.duel) cratesEl.querySelectorAll('.team').forEach(t => t.classList.remove('ready', 'done'));
+    say(F.timed ? 'Zeit ist um! Schaut, wer die meisten Wörter geschafft hat.'
+                : F.duel ? 'Das Duell ist zu Ende! Schaut auf die Punkte.' : 'Feierabend! Alle Nomen liegen in den richtigen Kisten!', 'good');
+    $('#fEndText').textContent = F.timed ? '⏱ Zeit ist um!' : F.duel ? '🏆 Das Duell ist zu Ende!' : '🎉 Feierabend! Alle Nomen sind sortiert.';
+    fillResultF();
+    sfx.win(); confetti();
+    $('#fEnd').hidden = false;
+    if (F.duel){
+      $('#fResult').hidden = true; $('#fCrates').textContent = 'Überblick';
+      setTimeout(() => { if (F.token === tok) openDuelPanel(); }, 1100);
+    } else {
+      setTimeout(() => { if (F.token === tok){ $('#overlay').hidden = false; $('#ovLook').focus(); } }, 900);
+    }
+  }
+  function openCrates(){
+    const box = $('#cpCols'); box.innerHTML = '';
+    CATS.forEach(c => {
+      const d = document.createElement('div');
+      d.className = 'col'; d.dataset.cat = c.key;
+      d.innerHTML = `<div class="col-head"><span aria-hidden="true">${c.icon}</span><span>${c.label}</span></div><div class="col-body"></div>`;
+      const body = d.querySelector('.col-body');
+      F.crates[c.key].forEach(w => body.appendChild(makeChip(w, c.key)));
+      box.appendChild(d);
+    });
+    $('#overlay').hidden = true; $('#cratePanel').hidden = false; $('#cpClose').focus();
+  }
+
+  /* ---------- Duell: Überblick am Ende ---------- */
+  function openDuelPanel(){
+    const a = F.teams.a, b = F.teams.b;
+    const win = a.score === b.score ? null : (a.score > b.score ? a : b);
+    $('#dpSub').textContent = `${win ? '🏆 Gewinner: ' + win.name : '🤝 Unentschieden'}  (${a.name} ${a.score} : ${b.score} ${b.name})`;
+    $('#dpTabA').textContent = `${a.name} (${a.score} richtig)`; $('#dpTabB').textContent = `${b.name} (${b.score} richtig)`;
+    const min = F.total / 60;
+    $('#dpStat').textContent = `${F.log.length} Wörter bearbeitet${F.timed ? ' in ' + min + (min === 1 ? ' Minute' : ' Minuten') : ''}. Jedes richtig zugeordnete Wort gibt einen Punkt.`;
+    renderDuelPanel(F.dpView || 'sol');
+    $('#overlay').hidden = true; $('#cratePanel').hidden = true;
+    $('#duelPanel').hidden = false; $('#dpHome').focus();
+  }
+  function renderDuelPanel(view){
+    F.dpView = view;
+    document.querySelectorAll('#dpTabs button').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === view)));
+    const T2 = F.teams;
+    // Erklärzeile
+    const info = $('#dpInfo'); info.textContent = '';
+    if (view === 'sol'){
+      const legend = document.createElement('span'); legend.className = 'dp-legend';
+      const item = (cls, sym, text) => {
+        const it = document.createElement('span'); it.className = 'it';
+        const mk = document.createElement('span'); mk.className = 'mk ' + cls; mk.textContent = sym;
+        it.append(mk, document.createTextNode(text)); return it;
+      };
+      legend.append(item('ok a', '✓', T2.a.name + ' richtig'), item('ok b', '✓', T2.b.name + ' richtig'), item('bad', '✗', 'falsch'));
+      info.append(document.createTextNode('So gehören die Wörter wirklich zusammen. '), legend);
+    } else {
+      const t = T2[view];
+      info.textContent = `${t.name}: ${t.score} von ${F.log.length} Wörtern richtig zugeordnet. Rot umrandet: falsch zugeordnet.`;
+    }
+    // Spalten mit den Wörtern
+    const box = $('#dpCols'); box.innerHTML = '';
+    CATS.forEach(c => {
+      const d = document.createElement('div');
+      d.className = 'col'; d.dataset.cat = c.key;
+      d.innerHTML = `<div class="col-head"><span aria-hidden="true">${c.icon}</span><span>${c.label}</span></div><div class="col-body"></div>`;
+      const body = d.querySelector('.col-body');
+      F.log.forEach(e => {
+        if (view === 'sol'){
+          if (e.right !== c.key) return;
+          const chip = makeChip(e.w, c.key);
+          [['a', e.a], ['b', e.b]].forEach(([k, choice]) => {
+            const ok = choice === e.right;
+            const mk = document.createElement('span');
+            mk.className = 'mk ' + k + (ok ? ' ok' : ' bad');
+            mk.textContent = ok ? '✓' : '✗';
+            mk.title = ok ? `${T2[k].name}: richtig` : `${T2[k].name}: ${catOf(choice).label}`;
+            chip.appendChild(mk);
+          });
+          body.appendChild(chip);
+        } else {
+          const choice = e[view];
+          if (choice !== c.key) return;
+          const chip = makeChip(e.w, c.key);
+          if (choice !== e.right){
+            chip.classList.add('wrong');
+            const sm = document.createElement('small'); sm.textContent = 'richtig: ' + catOf(e.right).label;
+            chip.appendChild(sm);
+          }
+          body.appendChild(chip);
+        }
+      });
+      const cnt = document.createElement('span'); cnt.className = 'cnt'; cnt.textContent = body.children.length;
+      d.querySelector('.col-head').appendChild(cnt);
+      box.appendChild(d);
+    });
+  }
+
+  /* Tastatur: 1 bis 4 wählen die Kisten */
+  document.addEventListener('keydown', e => {
+    if (factory.hidden || !$('#overlay').hidden || !$('#cratePanel').hidden) return;
+    const i = ['1', '2', '3', '4'].indexOf(e.key);
+    if (i >= 0) onCrate(CATS[i].key);
+  });
+
+  /* ---------- Bedienung ---------- */
+  function syncOpts(){
+    document.querySelectorAll('[data-for]').forEach(el => { el.hidden = !el.dataset.for.split(' ').includes(cfg.mode); });
+    $('#perPicker').hidden = cfg.mode === 'duel' && cfg.time > 0;
+  }
+  function updateNote(){
+    const total = cfg.per * 4;
+    let text;
+    if (cfg.mode === 'duel' && cfg.time > 0){
+      const min = cfg.time / 60;
+      text = `Ihr habt ${min} ${min === 1 ? 'Minute' : 'Minuten'} Zeit. Die Uhr startet beim ersten Wort. Beide Teams tippen bei jedem Wort ihre Kiste. Wenn die Zeit um ist, gewinnt das Team mit den meisten richtigen Wörtern. Es sind alle 80 Wörter dabei. Die Antworten bleiben geheim, bis beide Teams gewählt haben.`;
+    } else if (cfg.mode === 'duel'){
+      text = `${total} Wörter insgesamt. Zwei Teams spielen gegeneinander: Ein Paket fährt bis ans Ende des Bandes, dann wählt jedes Team seine Kiste. Sind beide fertig, zeigt der Roboter die Lösung, und das nächste Wort kommt. Die Antworten bleiben geheim, bis beide Teams gewählt haben. Jede richtige Antwort gibt einen Punkt.`;
+    } else if (cfg.mode === 'belt'){
+      const tempo = {
+        calm: 'Das Band wartet, bis das Paket sortiert ist.',
+        mid:  'Das Band fährt weiter und wird schneller. Verpasste Pakete kommen später noch einmal.',
+        fast: 'Das Band ist schnell. Verpasste Pakete kommen später noch einmal.'
+      }[cfg.tempo];
+      text = `${total} Wörter insgesamt. Die Wörter fahren als Pakete auf dem Band. Tippe die richtige Kiste an, dann wirft der Roboterarm das Paket hinein. ${tempo}`;
+    } else {
+      const how = cfg.reveal === 'end'
+        ? 'Ohne Rückmeldung: Die Wörter verschwinden in den Kisten. Am Ende geht es mit „Weiter“ zur Ansicht und zur Auflösung.'
+        : 'Mit Rückmeldung: Richtige Wörter bleiben sichtbar, falsche wackeln.';
+      const where = isCross() ? ' Das Wort erscheint in der Mitte des Kreuzes.' : '';
+      text = `${total} Wörter insgesamt. ${how}${where}`;
+    }
+    $('#modeNote').textContent = text;
+  }
+  document.querySelectorAll('.picker').forEach(g => {
+    const key = g.dataset.key;
+    g.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      g.querySelectorAll('button').forEach(x => x.setAttribute('aria-checked', String(x === b)));
+      cfg[key] = (key === 'per' || key === 'time') ? +b.dataset.value : b.dataset.value;
+      syncOpts(); updateNote();
+    }));
+  });
+  syncOpts(); updateNote();
+
+  $('#startBtn').addEventListener('click', startGame);
+  $('#ovAgain').addEventListener('click', startGame);
+  $('#barAgain').addEventListener('click', startGame);
+  $('#barIntro').addEventListener('click', toIntro);
+  $('#nextBtn').addEventListener('click', reveal);
+  $('#barReveal').addEventListener('click', check);
+  $('#barResult').addEventListener('click', () => { $('#overlay').hidden = false; $('#ovLook').focus(); });
+  $('#ovLook').addEventListener('click', () => { $('#overlay').hidden = true; window.scrollTo({ top: 0 }); });
+
+  $('#fAgain').addEventListener('click', startGame);
+  $('#fIntro').addEventListener('click', toIntro);
+  $('#fResult').addEventListener('click', () => { $('#overlay').hidden = false; $('#ovLook').focus(); });
+  $('#fCrates').addEventListener('click', () => { if (F.duel) openDuelPanel(); else openCrates(); });
+  $('#ovCrates').addEventListener('click', openCrates);
+  $('#dpHome').addEventListener('click', toIntro);
+  $('#dpAgain').addEventListener('click', startGame);
+  document.querySelectorAll('#dpTabs button').forEach(t => t.addEventListener('click', () => renderDuelPanel(t.dataset.view)));
+  $('#cpClose').addEventListener('click', () => { $('#cratePanel').hidden = true; });
+  $('#fSpeak').addEventListener('click', () => { const p = frontPkg(); if (p) speak(p.wd.w); });
+
+  document.querySelectorAll('.reset-btn').forEach(btn => {
+    let timer;
+    btn.addEventListener('click', () => {
+      if (btn.dataset.armed){
+        clearTimeout(timer); btn.dataset.armed = ''; btn.textContent = '↩ Neu';
+        toIntro(); return;
+      }
+      btn.dataset.armed = '1'; btn.textContent = 'Wirklich?';
+      timer = setTimeout(() => { btn.dataset.armed = ''; btn.textContent = '↩ Neu'; }, 3000);
+    });
+  });
+})();
+</script>
+</body>
+</html>
